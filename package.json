@@ -1,0 +1,58 @@
+{
+  "name": "advanced",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "dev:client": "webpack-dev-server -d --config webpack.config.client.js --env.dev",
+    "dev:server": "webpack --config webpack.config.server.js --env.dev",
+    "build": "rimraf dist && webpack --config webpack.config.server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^6.5.3",
+    "babel-core": "^6.18.2",
+    "babel-loader": "^6.2.7",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-preset-latest": "^6.16.0",
+    "css-loader": "^0.25.0",
+    "eslint": "^3.10.0",
+    "eslint-config-enough": "^0.1.2",
+    "eslint-loader": "^1.6.1",
+    "eslint-plugin-html": "^1.7.0",
+    "file-loader": "^0.9.0",
+    "html-loader": "^0.4.4",
+    "html-webpack-plugin": "^2.24.1",
+    "postcss-loader": "^1.1.1",
+    "rimraf": "^2.5.4",
+    "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
+    "vue-loader": "^10.0.2",
+    "vue-template-compiler": "^2.1.3",
+    "webpack": "^2.1.0-beta.26",
+    "webpack-dev-server": "^2.1.0-beta.10"
+  },
+  "eslintConfig": {
+    "extends": "enough",
+    "env": {
+      "browser": true,
+      "node": true
+    },
+    "plugins": [
+      "html"
+    ],
+    "globals": {
+      "DEBUG": false,
+      "TARGET": false,
+      "VERSION": false,
+      "CONF": false
+    }
+  },
+  "dependencies": {
+    "express": "^4.14.0",
+    "vue": "^2.1.3",
+    "vue-router": "^2.1.0",
+    "vue-server-renderer": "^2.1.3"
+  }
+}
