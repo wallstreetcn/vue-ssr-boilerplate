@@ -1,12 +1,17 @@
 {
-  "name": "advanced",
-  "version": "1.0.0",
+  "name": "vue-ssr",
+  "version": "0.1.0",
   "description": "",
-  "main": "",
+  "main": "server.js",
   "scripts": {
-    "dev:client": "webpack-dev-server -d --config webpack.config.client.js --env.dev",
-    "dev:server": "webpack --config webpack.config.server.js --env.dev",
-    "build": "rimraf dist && webpack --config webpack.config.server.js"
+    "dev": "webpack-dev-server -d --config webpack.config.client.js --env.dev --env.config dev",
+    "dev:ssr": "run-p dev:ssr:client dev:ssr:server dev:ssr:mon",
+    "dev:ssr:brk": "run-p dev:ssr:client dev:ssr:server dev:ssr:mon:brk",
+    "dev:ssr:client": "webpack-dev-server -d --config webpack.config.client.js --env.dev --env.config dev --env.ssr",
+    "dev:ssr:server": "webpack -w --config webpack.config.server.js --env.dev --env.config dev",
+    "dev:ssr:mon": "node -e \"setTimeout(()=>{}, 8000)\" && nodemon --inspect server.js -- --dev --config dev",
+    "dev:ssr:mon:brk": "node -e \"setTimeout(()=>{}, 8000)\" && nodemon --inspect --debug-brk server.js -- --dev --config dev",
+    "build": "rimraf dist && webpack --config webpack.config.server.js && webpack -p --config webpack.config.client.js"
   },
   "author": "",
   "license": "ISC",
@@ -14,7 +19,6 @@
     "autoprefixer": "^6.5.3",
     "babel-core": "^6.18.2",
     "babel-loader": "^6.2.7",
-    "babel-plugin-add-module-exports": "^0.2.1",
     "babel-preset-latest": "^6.16.0",
     "css-loader": "^0.25.0",
     "eslint": "^3.10.0",
@@ -24,6 +28,8 @@
     "file-loader": "^0.9.0",
     "html-loader": "^0.4.4",
     "html-webpack-plugin": "^2.24.1",
+    "nodemon": "^1.11.0",
+    "npm-run-all": "^3.1.2",
     "postcss-loader": "^1.1.1",
     "rimraf": "^2.5.4",
     "style-loader": "^0.13.1",
@@ -31,7 +37,8 @@
     "vue-loader": "^10.0.2",
     "vue-template-compiler": "^2.1.3",
     "webpack": "^2.1.0-beta.26",
-    "webpack-dev-server": "^2.1.0-beta.10"
+    "webpack-dev-server": "^2.1.0-beta.10",
+    "write-file-webpack-plugin": "^3.4.2"
   },
   "eslintConfig": {
     "extends": "enough",
@@ -46,13 +53,14 @@
       "DEBUG": false,
       "TARGET": false,
       "VERSION": false,
-      "CONF": false
+      "CONFIG": false
     }
   },
   "dependencies": {
     "express": "^4.14.0",
     "vue": "^2.1.3",
     "vue-router": "^2.1.0",
-    "vue-server-renderer": "^2.1.3"
+    "vue-server-renderer": "^2.1.3",
+    "yargs": "^6.5.0"
   }
 }

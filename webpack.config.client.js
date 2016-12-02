@@ -1,19 +1,20 @@
 const { resolve } = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const WriteFilePlugin = require('write-file-webpack-plugin');
 const pkgInfo = require('./package.json');
 
 module.exports = function(options = {}) {
-  const profile = require('./conf/' + (process.env.npm_config_profile || 'default'));
+  const config = require('./config/' + (process.env.npm_config_config || options.config || 'default'));
 
-  return {
+  const cfg = {
     entry: {
       vendor: './src/vendor',
       client: './src/client-entry'
     },
 
     output: {
-      path: resolve(__dirname, 'dist'),
+      path: resolve(__dirname, options.dev ? 'tmp' : 'dist'),
       filename: options.dev ? '[name].js' : '[name].js?[chunkhash]',
       chunkFilename: '[id].js?[chunkhash]',
       publicPath: '/assets/'
@@ -106,20 +107,18 @@ module.exports = function(options = {}) {
         DEBUG: Boolean(options.dev),
         TARGET: '"web"',
         VERSION: JSON.stringify(pkgInfo.version),
-        CONF: JSON.stringify({
-          experimentalFeatures: profile.experimentalFeatures,
-          thirdPartyApiKey: profile.thirdPartyApiKey
-        })
+        CONFIG: JSON.stringify(config.runtimeConfig)
       })
     ],
 
     devServer: {
-      port: profile.devServer.port,
+      host: '0.0.0.0',
+      port: config.devServer.port,
       historyApiFallback: {
         index: '/assets/'
       },
 
-      proxy: profile.devServer.proxy
+      proxy: config.devServer.proxy
     },
 
     resolve: {
@@ -128,4 +127,20 @@ module.exports = function(options = {}) {
       }
     }
   };
+
+  if (options.ssr) {
+    cfg.plugins.push(new WriteFilePlugin());
+    cfg.devServer.proxy = Object.assign(cfg.devServer.proxy, {
+      '/': {
+        target: `http://localhost:${config.ssrPort}`,
+        bypass(req) {
+          if (req.url.indexOf('/assets/') === 0) {
+            return req.url;
+          }
+        }
+      }
+    });
+  }
+
+  return cfg;
 };

@@ -1,11 +1,27 @@
+const { argv } = require('yargs');
 const fs = require('fs');
 const express = require('express');
 const { createBundleRenderer } = require('vue-server-renderer');
 
-const bundle = fs.readFileSync('./dist/server.js', 'utf8');
+process.chdir(__dirname);
+
+let distDir;
+if (argv.dev) {
+  process.env.NODE_ENV = 'development';
+  distDir = './tmp';
+} else {
+  process.env.NODE_ENV = 'production';
+  distDir = './dist';
+}
+
+const configFile = process.env.npm_config_config || argv.config || 'default';
+console.log(`loading config ${configFile}`); // eslint-disable-line
+const config = require('./config/' + configFile);
+
+const bundle = fs.readFileSync(`${distDir}/server.js`, 'utf8');
 const renderer = createBundleRenderer(bundle);
 
-const indexHTML = fs.readFileSync('./dist/index.html', 'utf8').split('<div id="app"></div>');
+const indexHTML = fs.readFileSync(`${distDir}/index.html`, 'utf8').split('<div id="app"></div>');
 
 const app = express();
 app.get('*', (req, res) => {
@@ -27,7 +43,7 @@ app.get('*', (req, res) => {
     if (context.data) {
       res.write(`
         <script>
-          window.__data__ = ${JSON.stringify(context.data)};
+          window.__SSR_DATA__ = ${JSON.stringify(context.data)};
         </script>
       `);
     }
@@ -46,6 +62,6 @@ app.get('*', (req, res) => {
   });
 });
 
-app.listen(8300, () => {
-  console.log('server started at http://localhost:8300'); // eslint-disable-line
+app.listen(config.ssrPort, () => {
+  console.log(`server started at port ${config.ssrPort}`); // eslint-disable-line
 });

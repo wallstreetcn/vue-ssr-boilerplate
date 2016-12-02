@@ -20,7 +20,7 @@ export default {
 
   // won't run on server side
   beforeMount() {
-    console.log(this.data); //eslint-disable-line
+    console.log(this.a); //eslint-disable-line
   }
 };
 </script>

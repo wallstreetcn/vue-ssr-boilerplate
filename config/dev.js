@@ -1,13 +1,13 @@
 module.exports = {
-  experimentalFeatures: {
-    html5player: true,
-    featureFoo: false
+  runtimeConfig: {
+    settingFoo: true,
+    settingBar: false
   },
 
-  thirdPartyApiKey: 'abcdefg123456',
+  ssrPort: 8200,
 
   devServer: {
-    port: 8010,
+    port: 8100,
     proxy: {
       '/api/auth/': {
         target: 'http://api.example.dev',

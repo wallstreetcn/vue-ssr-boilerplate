@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const pkgInfo = require('./package.json');
 
 module.exports = function(options = {}) {
-  const profile = require('./conf/' + (process.env.npm_config_profile || 'default'));
+  const config = require('./config/' + (process.env.npm_config_config || options.config || 'default'));
 
   return {
     entry: {
@@ -13,9 +13,9 @@ module.exports = function(options = {}) {
     target: 'node',
 
     output: {
-      path: resolve(__dirname, 'dist'),
-      filename: '[name].js',
-      chunkFilename: '[id].js',
+      path: resolve(__dirname, options.dev ? 'tmp' : 'dist'),
+      filename: options.dev ? '[name].js' : '[name].js?[chunkhash]',
+      chunkFilename: '[id].js?[chunkhash]',
       publicPath: '/assets/',
       libraryTarget: 'commonjs2'
     },
@@ -70,10 +70,7 @@ module.exports = function(options = {}) {
         DEBUG: Boolean(options.dev),
         TARGET: '"node"',
         VERSION: JSON.stringify(pkgInfo.version),
-        CONF: JSON.stringify({
-          experimentalFeatures: profile.experimentalFeatures,
-          thirdPartyApiKey: profile.thirdPartyApiKey
-        })
+        CONFIG: JSON.stringify(config.runtimeConfig)
       })
     ],
 
