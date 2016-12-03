@@ -30,6 +30,13 @@ not bother with server side things.
 npm run dev:ssr
 ```
 When your pages look fine, then you step into SSR mode to check the server side is OK.
+You can debug your server side code using Chrome ( https://nodejs.org/api/debugger.html#debugger_v8_inspector_integration_for_node_js ).
+But codes in `src` folder are run in node VM context, so can not be debugged. use `npm run dev` and debug in browser instead.
+
+```sh
+npm run dev:ssr:brk
+```
+This will break on the first line of `server.js`.
 
 
 ## Some Example Pages
