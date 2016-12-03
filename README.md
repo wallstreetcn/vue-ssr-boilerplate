@@ -1,3 +1,7 @@
+<p align="center">
+  <img width="100"src="https://vuejs.org/images/logo.png">
+</p>
+
 # Vue SSR Boilerplate
 Vue.js Server Side Rendering Boilerplate without Polluting Vuex
 
