@@ -40,13 +40,12 @@ app.get('*', (req, res) => {
   });
 
   renderStream.on('end', () => {
-    if (context.data) {
-      res.write(`
-        <script>
-          window.__SSR_DATA__ = ${JSON.stringify(context.data)};
-        </script>
-      `);
-    }
+    res.write(`
+      <script>
+        window.__INITIAL_COMPONENTS_STATE__ = ${JSON.stringify(context.initialComponentsState)};
+        window.__INITIAL_VUEX_STATE__ = ${JSON.stringify(context.initialVuexState)};
+      </script>
+    `);
 
     res.end(indexHTML[1]);
   });

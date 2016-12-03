@@ -1,4 +1,4 @@
-import { app, router } from './app';
+import { app, router, store } from './app';
 
 export default context => {
   router.push(context.url);
@@ -13,15 +13,16 @@ export default context => {
   // Call prefetch hooks on components matched by the route.
   return Promise.all(matchedComponents.map(component => {
     if (component.prefetch) {
-      return component.prefetch().then(data => {
-        component.__SSR_DATA__ = data;
+      return component.prefetch(store).then(data => {
+        component.__INITIAL_STATE__ = data;
         return data;
       });
     } else {
       return null;
     }
-  })).then(data => {
-    context.data = data;
+  })).then(initialComponentsState => {
+    context.initialComponentsState = initialComponentsState;
+    context.initialVuexState = store.state;
     return app;
   });
 };

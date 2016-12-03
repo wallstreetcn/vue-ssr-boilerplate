@@ -1,6 +1,8 @@
 <template>
   <div class="foo">
-    Hello world! {{a}}
+    <p>this.a: {{a}}</p>
+    <p>this.$store.state.count: {{$store.state.count}}</p>
+    <p><router-link to="/">goto /</router-link>
   </div>
 </template>
 
@@ -12,10 +14,18 @@ export default {
     };
   },
 
-  prefetch() {
-    return Promise.resolve({
-      a: 123
-    });
+  prefetch(store) {
+    return Promise.all([
+      new Promise(resolve => {
+        setTimeout(() => {
+          resolve({
+            a: 123
+          });
+        });
+      }),
+
+      store.dispatch('asyncIncrement')
+    ]).then(([componentData]) => componentData);
   },
 
   // won't run on server side
