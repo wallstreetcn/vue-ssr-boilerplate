@@ -3,6 +3,8 @@
     <p>Hello world!</p>
     <p>this.a: {{a}}</p>
     <p><router-link to="/foo">goto /foo</router-link></p>
+    <p><router-link to="/page-not-exist">goto /page-not-exist</router-link></p>
+    <p><router-link to="/show-error-page">goto /show-error-page</router-link></p>
   </div>
 </template>
 
@@ -18,6 +20,11 @@ export default {
     return Promise.resolve({
       a: 123
     });
+  },
+
+  // will be called on server side. check your console
+  created() {
+    console.log(this.a); //eslint-disable-line
   },
 
   // won't run on server side

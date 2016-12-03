@@ -4,4 +4,5 @@ npm-debug.log*
 .idea
 conf/*
 !conf/default.js
+!conf/dev.js
 /tmp

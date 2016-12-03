@@ -21,7 +21,8 @@ const config = require('./config/' + configFile);
 const bundle = fs.readFileSync(`${distDir}/server.js`, 'utf8');
 const renderer = createBundleRenderer(bundle);
 
-const indexHTML = fs.readFileSync(`${distDir}/index.html`, 'utf8').split('<div id="app"></div>');
+const indexHTML = fs.readFileSync(`${distDir}/index.html`, 'utf8');
+const [indexHTMLHeader, indexHTMLFooter] = indexHTML.split('<div id="app"></div>');
 
 const app = express();
 app.get('*', (req, res) => {
@@ -32,7 +33,7 @@ app.get('*', (req, res) => {
   const renderStream = renderer.renderToStream(context);
 
   renderStream.once('data', () => {
-    res.write(indexHTML[0]);
+    res.write(indexHTMLHeader);
   });
 
   renderStream.on('data', chunk => {
@@ -47,14 +48,16 @@ app.get('*', (req, res) => {
       </script>
     `);
 
-    res.end(indexHTML[1]);
+    res.end(indexHTMLFooter);
   });
 
   renderStream.on('error', err => {
     if (err && err.code === '404') {
-      res.status(404).end('404 | Page Not Found');
+      // let client to render a 404 page
+      res.status(404).end(indexHTML);
     } else {
-      res.status(500).end('Internal Error 500');
+      // let client to render a 500 page
+      res.status(500).end(indexHTML);
       console.error(`error during render : ${req.url}`); // eslint-disable-line
       console.error(err); // eslint-disable-line
     }
