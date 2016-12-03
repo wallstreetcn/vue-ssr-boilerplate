@@ -1,4 +1,4 @@
-# Vue-SSR
+# Vue SSR Boilerplate
 Vue.js Server Side Rendering Boilerplate without Polluting Vuex
 
 
