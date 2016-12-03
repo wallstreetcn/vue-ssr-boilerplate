@@ -14,7 +14,7 @@
     "build": "rimraf dist && webpack --config webpack.config.server.js && webpack -p --config webpack.config.client.js"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "autoprefixer": "^6.5.3",
     "babel-core": "^6.18.2",

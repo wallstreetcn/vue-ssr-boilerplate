@@ -261,5 +261,16 @@ And we also defined some environment variables using webpack.DefinePlugin:
 * `TARGET`: `node` on server-side, `web` on client-side.
 * `CONFIG`: `runtimeConfig` exported by `config/*` files.
 
+
+## Why XXX loaders are not configured?
+No dish suits all tastes. Just fork it and add your sass/stylus/typescript/... loaders.
+Or change to your favorite eslint or babel presets.
+
+
+## Contributing
+If you find bugs, please submit issues on github. Pull requests are welcome!
+
 ## License
-MIT. Fork and PR are welcome!
+[MIT](http://opensource.org/licenses/MIT)
+
+Copyright (c) 2016 Jiang Fengming
