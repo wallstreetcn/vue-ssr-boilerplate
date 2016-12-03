@@ -9,8 +9,8 @@
     "dev:ssr:brk": "run-p dev:ssr:client dev:ssr:server dev:ssr:mon:brk",
     "dev:ssr:client": "webpack-dev-server -d --config webpack.config.client.js --env.dev --env.config dev --env.ssr",
     "dev:ssr:server": "webpack -w --config webpack.config.server.js --env.dev --env.config dev",
-    "dev:ssr:mon": "node -e \"setTimeout(()=>{}, 8000)\" && nodemon --inspect server.js -- --dev --config dev",
-    "dev:ssr:mon:brk": "node -e \"setTimeout(()=>{}, 8000)\" && nodemon --inspect --debug-brk server.js -- --dev --config dev",
+    "dev:ssr:mon": "node -e \"setTimeout(()=>{}, 8000)\" && nodemon --inspect --ignore src/ server.js -- --dev --config dev",
+    "dev:ssr:mon:brk": "node -e \"setTimeout(()=>{}, 8000)\" && nodemon --inspect --debug-brk --ignore src/ server.js -- --dev --config dev",
     "build": "rimraf dist && webpack --config webpack.config.server.js && webpack -p --config webpack.config.client.js"
   },
   "author": "",
