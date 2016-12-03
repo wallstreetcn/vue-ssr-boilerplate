@@ -21,7 +21,7 @@ Then install npm packages via `npm install`.
 ```sh
 npm run dev
 ```
-I recommend develop in this mode at first. So you can focus on your view things,
+I recommend developing in this mode at first. So you can focus on your view things,
 not bother with server side things.
 
 
@@ -30,7 +30,7 @@ not bother with server side things.
 npm run dev:ssr
 ```
 When your pages look fine, then you step into SSR mode to check the server side is OK.
-You can debug your server side code using Chrome ( https://nodejs.org/api/debugger.html#debugger_v8_inspector_integration_for_node_js ).
+`--inspect` flag is on, so you can debug your server side code using Chrome ( https://nodejs.org/api/debugger.html#debugger_v8_inspector_integration_for_node_js ).
 But codes in `src` folder are run in node VM context, so can not be debugged. use `npm run dev` and debug in browser instead.
 
 ```sh
