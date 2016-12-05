@@ -11,7 +11,7 @@ Vue.js Server Side Rendering Boilerplate without Polluting Vuex
 * Vuex is there, global states can still put into Vuex store.
 * Customizable webpack config.
 * Hot module replacement.
-* Codes can run with or without SSR. Just use different `npm run` commands.
+* Codes can run with or without SSR.
 * And so on.
 
 
