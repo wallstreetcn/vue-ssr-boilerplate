@@ -6,6 +6,9 @@ module.exports = {
 
   ssrPort: 8200,
 
+  publicPath: '/assets/',
+  serveStaticMountPath: '/assets',
+
   devServer: {
     port: 8100,
     proxy: {

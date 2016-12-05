@@ -16,7 +16,7 @@ module.exports = function(options = {}) {
       path: resolve(__dirname, options.dev ? 'tmp' : 'dist'),
       filename: options.dev ? '[name].js' : '[name].js?[chunkhash]',
       chunkFilename: '[id].js?[chunkhash]',
-      publicPath: '/assets/',
+      publicPath: config.publicPath,
       libraryTarget: 'commonjs2'
     },
 

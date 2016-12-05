@@ -8,10 +8,10 @@ process.chdir(__dirname);
 let distDir;
 if (argv.dev) {
   process.env.NODE_ENV = 'development';
-  distDir = './tmp';
+  distDir = 'tmp';
 } else {
   process.env.NODE_ENV = 'production';
-  distDir = './dist';
+  distDir = 'dist';
 }
 
 const configFile = process.env.npm_config_config || argv.config || 'default';
@@ -25,6 +25,11 @@ const indexHTML = fs.readFileSync(`${distDir}/index.html`, 'utf8');
 const [indexHTMLHeader, indexHTMLFooter] = indexHTML.split('<div id="app"></div>');
 
 const app = express();
+
+if (config.serveStaticMountPath) {
+  app.use(config.serveStaticMountPath, express.static(distDir));
+}
+
 app.get('*', (req, res) => {
   const context = {
     url: req.url

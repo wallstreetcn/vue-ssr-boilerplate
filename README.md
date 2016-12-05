@@ -21,34 +21,37 @@ First, download or clone this project.
 Then install npm packages via `npm install`.
 
 
-## Start without SSR
+## Development
 ```sh
 npm run dev
 ```
+
+### without SSR
+http://localhost:8100
+
+It's served by webpack-dev-server.
 I recommend developing in this mode at first. So you can focus on your view things,
 not bother with server side things.
 
+### with SSR
+http://localhost:8200
 
-## Start with SSR
-```sh
-npm run dev:ssr
-```
 When your pages look fine, then you step into SSR mode to check the server side is OK.
 `--inspect` flag is on, so you can debug your server side code using Chrome ( https://nodejs.org/api/debugger.html#debugger_v8_inspector_integration_for_node_js ).
-But codes in `src` folder are run in node VM context, so can not be debugged. use `npm run dev` and debug in browser instead.
+But codes in `src` folder are run in node VM context, so can not be debugged.
+
 
 ```sh
-npm run dev:ssr:brk
+npm run dev:brk
 ```
 This will break on the first line of `server.js`.
 
 
 ## Some Example Pages
-When you start the project, you can visit `http://localhost/8100` to look around.
-Whenever you start with or without SSR, the URL is the same.
+When you start the project, you can visit http://localhost:8100 or http://localhost:8200 to look around.
 
 
-## How to Write Page
+## How to Write Pages
 Every thing is the same as developing a SPA, except one thing, you need to define a
 `prefetch` method in your component. `prefetch` must return a `Promise`,
 the resolved result will be merge into `this.$data` during rendering.
@@ -240,6 +243,8 @@ Files will be output to `dist` folder. In `npm run dev:ssr` mode, files are outp
 node server.js
 ```
 
+In production,
+
 
 ## Configuration
 By default, the boilerplate provides two sets of config files.
@@ -257,7 +262,9 @@ node server.js --config=YOUR-CONFIG-FILE-NAME
 ```
 in production.
 
-The `ssrPort` is the port number that the server-side listened on.
+* `ssrPort`: The port number that the server-side listened on.
+* `publicPath`: `output.publicPath` of webpack.
+* `serveStaticMountPath`: Mount path of `express.static()`. It's normally the same as `publicPath` without trailing slash.
 
 And we also defined some environment variables using webpack.DefinePlugin:
 * `DEBUG`: `true` in development, `false` in production.

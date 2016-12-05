@@ -7,7 +7,7 @@ const pkgInfo = require('./package.json');
 module.exports = function(options = {}) {
   const config = require('./config/' + (process.env.npm_config_config || options.config || 'default'));
 
-  const cfg = {
+  return {
     entry: {
       vendor: './src/vendor',
       client: './src/client-entry'
@@ -17,7 +17,7 @@ module.exports = function(options = {}) {
       path: resolve(__dirname, options.dev ? 'tmp' : 'dist'),
       filename: options.dev ? '[name].js' : '[name].js?[chunkhash]',
       chunkFilename: '[id].js?[chunkhash]',
-      publicPath: '/assets/'
+      publicPath: config.publicPath
     },
 
     module: {
@@ -108,14 +108,16 @@ module.exports = function(options = {}) {
         TARGET: '"web"',
         VERSION: JSON.stringify(pkgInfo.version),
         CONFIG: JSON.stringify(config.runtimeConfig)
-      })
+      }),
+
+      new WriteFilePlugin()
     ],
 
     devServer: {
       host: '0.0.0.0',
       port: config.devServer.port,
       historyApiFallback: {
-        index: '/assets/'
+        index: config.publicPath
       },
 
       proxy: config.devServer.proxy
@@ -127,20 +129,4 @@ module.exports = function(options = {}) {
       }
     }
   };
-
-  if (options.ssr) {
-    cfg.plugins.push(new WriteFilePlugin());
-    cfg.devServer.proxy = Object.assign(cfg.devServer.proxy, {
-      '/': {
-        target: `http://localhost:${config.ssrPort}`,
-        bypass(req) {
-          if (req.url.indexOf('/assets/') === 0) {
-            return req.url;
-          }
-        }
-      }
-    });
-  }
-
-  return cfg;
 };
