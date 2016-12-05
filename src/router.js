@@ -1,10 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-Router.prototype.silenceReplace = function(location) {
-  return this.history.updateRoute(this.match(location));
-};
-
 Vue.use(Router);
 
 import Index from './views/Index.vue';
