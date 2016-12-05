@@ -235,15 +235,14 @@ npm run build
 ```
 That's it.
 
-Files will be output to `dist` folder. In `npm run dev:ssr` mode, files are output to `tmp` folder.
+Files will be output to `dist` folder. In `npm run dev` mode, files are output to `tmp` folder.
 
 
 ## Run in Production
 ```sh
 node server.js
 ```
-
-In production,
+In production, instead of serving static assets by SSR server, you should setup a nginx to serve static assets for performance reason.
 
 
 ## Configuration
@@ -252,7 +251,6 @@ By default, the boilerplate provides two sets of config files.
 You can override by
 ```sh
 npm run dev --config=YOUR-CONFIG-FILE-NAME
-npm run dev:ssr --config=YOUR-CONFIG-FILE-NAME
 ```
 in development.
 
