@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="100"src="https://vuejs.org/images/logo.png">
+  <img width="100"src="src/favicon.png">
 </p>
 
 # Vue SSR Boilerplate
