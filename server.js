@@ -22,7 +22,7 @@ const bundle = fs.readFileSync(`${distDir}/server.js`, 'utf8');
 const renderer = createBundleRenderer(bundle);
 
 const indexHTML = fs.readFileSync(`${distDir}/index.html`, 'utf8');
-const [indexHTMLHeader, indexHTMLFooter] = indexHTML.split('<div id="app"></div>');
+const [indexHTMLHeader, indexHTMLFooter] = indexHTML.split(/<div id="?app"?><\/div>/);
 
 const app = express();
 

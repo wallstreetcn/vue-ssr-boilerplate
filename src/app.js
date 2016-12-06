@@ -18,10 +18,9 @@ Vue.mixin({
   }
 });
 
-const app = new Vue({
+const app = new Vue(Object.assign(App, {
   router,
-  store,
-  render: h => h(App)
-});
+  store
+}));
 
 export { app, router, store };

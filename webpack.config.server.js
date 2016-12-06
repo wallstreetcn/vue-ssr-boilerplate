@@ -34,24 +34,6 @@ module.exports = function(options = {}) {
         },
 
         {
-          test: /\.html$/,
-          use: [
-            {
-              loader: 'html-loader',
-              options: {
-                root: resolve(__dirname, 'src'),
-                attrs: ['img:src', 'link:href']
-              }
-            }
-          ]
-        },
-
-        {
-          test: /\.css$/,
-          use: ['style-loader', 'css-loader', 'postcss-loader']
-        },
-
-        {
           test: /\.(png|jpg|jpeg|gif|eot|ttf|woff|woff2|svg|svgz)(\?.+)?$/,
           use: [
             {

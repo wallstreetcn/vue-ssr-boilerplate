@@ -2,12 +2,13 @@ const { resolve } = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const pkgInfo = require('./package.json');
 
 module.exports = function(options = {}) {
   const config = require('./config/' + (process.env.npm_config_config || options.config || 'default'));
 
-  return {
+  const cfg = {
     entry: {
       vendor: './src/vendor',
       client: './src/client-entry'
@@ -24,29 +25,25 @@ module.exports = function(options = {}) {
       rules: [
         {
           test: /\.vue$/,
-          use: ['vue-loader', 'eslint-loader']
+          use: [
+            {
+              loader: 'vue-loader',
+              options: {
+                loaders: {
+                  css: ExtractTextPlugin.extract({
+                    loader: ['css-loader', 'postcss-loader'],
+                    fallbackLoader: 'style-loader'
+                  })
+                }
+              }
+            },
+            'eslint-loader']
         },
 
         {
           test: /\.js$/,
           exclude: /node_modules/,
-          use: [
-            {
-              loader: 'babel-loader',
-              options: {
-                presets: [
-                  ['latest', {
-                    es2015: {
-                      loose: true,
-                      modules: false
-                    }
-                  }]
-                ]
-              }
-            },
-
-            'eslint-loader'
-          ]
+          use: ['babel-loader', 'eslint-loader']
         },
 
         {
@@ -60,11 +57,6 @@ module.exports = function(options = {}) {
               }
             }
           ]
-        },
-
-        {
-          test: /\.css$/,
-          use: ['style-loader', 'css-loader', 'postcss-loader']
         },
 
         {
@@ -110,18 +102,14 @@ module.exports = function(options = {}) {
         CONFIG: JSON.stringify(config.runtimeConfig)
       }),
 
-      new WriteFilePlugin()
+      new WriteFilePlugin(),
+
+      new ExtractTextPlugin({
+        filename: '[name].css?[contenthash]',
+        allChunks: true,
+        disable: options.dev
+      })
     ],
-
-    devServer: {
-      host: '0.0.0.0',
-      port: config.devServer.port,
-      historyApiFallback: {
-        index: config.publicPath
-      },
-
-      proxy: config.devServer.proxy
-    },
 
     resolve: {
       alias: {
@@ -129,4 +117,18 @@ module.exports = function(options = {}) {
       }
     }
   };
+
+  if (config.devServer) {
+    cfg.devServer = {
+      host: '0.0.0.0',
+      port: config.devServer.port,
+      historyApiFallback: {
+        index: config.publicPath
+      },
+
+      proxy: config.devServer.proxy
+    };
+  }
+
+  return cfg;
 };

@@ -8,6 +8,12 @@
   </div>
 </template>
 
+<style scoped>
+.foo {
+  color: blue;
+}
+</style>
+
 <script>
 export default {
   data() {
