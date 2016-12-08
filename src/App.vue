@@ -12,6 +12,7 @@ export default {
   router,
   store,
   metaInfo: {
+    title: 'Default Title',
     titleTemplate: '%s - Company Name'
   }
 };
