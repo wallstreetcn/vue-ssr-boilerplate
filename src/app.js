@@ -2,21 +2,9 @@ import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
 import store from './store';
+import ssrMixin from './libs/ssrMixin';
 
-Vue.mixin({
-  created() {
-    if (this.constructor.extendOptions && this.constructor.extendOptions.__INITIAL_STATE__) {
-      Object.assign(this.$data, this.constructor.extendOptions.__INITIAL_STATE__);
-      this.prefetched = Promise.resolve(this.constructor.extendOptions.__INITIAL_STATE__);
-      this.constructor.extendOptions.__INITIAL_STATE__ = null;
-    } else if (this.$options.prefetch) {
-      this.prefetched = this.$options.prefetch(store).then(data => {
-        Object.assign(this.$data, data);
-        return data;
-      });
-    }
-  }
-});
+Vue.mixin(ssrMixin);
 
 const app = new Vue(Object.assign(App, {
   router,

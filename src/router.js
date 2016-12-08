@@ -21,21 +21,7 @@ if (TARGET === 'web') {
   );
 }
 
-const router = new Router({
+export default new Router({
   mode: 'history',
   routes
 });
-
-if (TARGET === 'web') {
-  router.afterEach(() => {
-    if (window.__INITIAL_COMPONENTS_STATE__) {
-      router.getMatchedComponents().forEach((component, i) => {
-        component.__INITIAL_STATE__ = window.__INITIAL_COMPONENTS_STATE__[i];
-      });
-
-      window.__INITIAL_COMPONENTS_STATE__ = null;
-    }
-  });
-}
-
-export default router;
