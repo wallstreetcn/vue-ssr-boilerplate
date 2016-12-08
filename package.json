@@ -1,7 +1,7 @@
 {
-  "name": "vue-ssr",
+  "name": "vue-ssr-boilerplate",
   "version": "0.1.0",
-  "description": "",
+  "description": "Vue.js Server Side Rendering Boilerplate without Polluting Vuex",
   "main": "server.js",
   "scripts": {
     "dev": "run-p dev:client dev:server dev:mon",
@@ -10,9 +10,10 @@
     "dev:server": "webpack -w --config webpack.config.server.js --env.dev --env.config dev",
     "dev:mon": "node -e \"setTimeout(()=>{}, 8000)\" && nodemon --inspect --ignore src/ server.js -- --dev --config dev",
     "dev:mon:brk": "node -e \"setTimeout(()=>{}, 8000)\" && nodemon --inspect --debug-brk --ignore src/ server.js -- --dev --config dev",
-    "build": "rimraf dist && webpack --config webpack.config.server.js && webpack -p --config webpack.config.client.js"
+    "build": "rimraf dist && webpack --config webpack.config.server.js && webpack -p --config webpack.config.client.js",
+    "start": "node server.js"
   },
-  "author": "",
+  "author": "Jiang Fengming",
   "license": "MIT",
   "devDependencies": {
     "autoprefixer": "^6.5.3",
@@ -76,5 +77,18 @@
     "vue-server-renderer": "^2.1.4",
     "vuex": "^2.0.0",
     "yargs": "^6.5.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fenivana/vue-ssr-boilerplate.git"
+  },
+  "keywords": [
+    "vue",
+    "server side rendering",
+    "ssr"
+  ],
+  "bugs": {
+    "url": "https://github.com/fenivana/vue-ssr-boilerplate/issues"
+  },
+  "homepage": "https://github.com/fenivana/vue-ssr-boilerplate#readme"
 }

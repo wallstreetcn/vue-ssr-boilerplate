@@ -1,4 +1,6 @@
-import { app, router, store } from './app';
+import app from './app';
+import router from './router';
+import store from './store';
 
 export default context => {
   router.push(context.url);
