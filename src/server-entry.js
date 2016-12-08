@@ -25,6 +25,7 @@ export default context => {
   })).then(initialComponentsState => {
     context.initialComponentsState = initialComponentsState;
     context.initialVuexState = store.state;
+    context.meta = app.$meta();
     return app;
   });
 };

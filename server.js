@@ -21,8 +21,27 @@ const config = require('./config/' + configFile);
 const bundle = fs.readFileSync(`${distDir}/server.js`, 'utf8');
 const renderer = createBundleRenderer(bundle);
 
-const indexHTML = fs.readFileSync(`${distDir}/index.html`, 'utf8');
-const [indexHTMLHeader, indexHTMLFooter] = indexHTML.split(/<div id="?app"?><\/div>/);
+function parseIndexHtml() {
+  const [
+    entire,
+    htmlOpen,
+    htmlOpenTailAndHead,
+    headCloseAndBodyOpen,
+    bodyOpenTailAndContentBeforeApp,
+    contentAfterAppAndHtmlClose
+  ] = fs.readFileSync(`${distDir}/index.html`, 'utf8').match(/^([\s\S]+?<html)([\s\S]+?)(<\/head>[\s\S]*?<body)([\s\S]+?)<div id="?app"?><\/div>([\s\S]+)$/);
+
+  return {
+    entire,
+    htmlOpen,
+    htmlOpenTailAndHead,
+    headCloseAndBodyOpen,
+    bodyOpenTailAndContentBeforeApp,
+    contentAfterAppAndHtmlClose
+  };
+}
+
+const indexHtml = parseIndexHtml();
 
 const app = express();
 
@@ -38,7 +57,18 @@ app.get('*', (req, res) => {
   const renderStream = renderer.renderToStream(context);
 
   renderStream.once('data', () => {
-    res.write(indexHTMLHeader);
+    const { title, htmlAttrs, bodyAttrs, link, style, script, noscript, meta } = context.meta.inject();
+
+    res.write(`
+      ${indexHtml.htmlOpen} data-vue-meta-server-rendered ${htmlAttrs.text()} ${indexHtml.htmlOpenTailAndHead}
+      ${meta.text()}
+      ${title.text()}
+      ${link.text()}
+      ${style.text()}
+      ${script.text()}
+      ${noscript.text()}
+      ${indexHtml.headCloseAndBodyOpen} ${bodyAttrs.text()} ${indexHtml.bodyOpenTailAndContentBeforeApp}
+    `);
   });
 
   renderStream.on('data', chunk => {
@@ -51,18 +81,19 @@ app.get('*', (req, res) => {
         window.__INITIAL_COMPONENTS_STATE__ = ${JSON.stringify(context.initialComponentsState)};
         window.__INITIAL_VUEX_STATE__ = ${JSON.stringify(context.initialVuexState)};
       </script>
+      ${indexHtml.contentAfterAppAndHtmlClose}
     `);
 
-    res.end(indexHTMLFooter);
+    res.end();
   });
 
   renderStream.on('error', err => {
     if (err && err.code === '404') {
       // let client to render a 404 page
-      res.status(404).end(indexHTML);
+      res.status(404).end(indexHtml.entire);
     } else {
       // let client to render a 500 page
-      res.status(500).end(indexHTML);
+      res.status(500).end(indexHtml.entire);
       console.error(`error during render : ${req.url}`); // eslint-disable-line
       console.error(err); // eslint-disable-line
     }

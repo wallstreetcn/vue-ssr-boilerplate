@@ -18,8 +18,19 @@
 export default {
   data() {
     return {
+      title: '',
+      description: '',
       a: 0,
       config: null
+    };
+  },
+
+  metaInfo() {
+    return {
+      title: this.title,
+      meta: [
+        { vmid: 'description', name: 'description', content: this.description }
+      ]
     };
   },
 
@@ -28,6 +39,8 @@ export default {
       new Promise(resolve => {
         setTimeout(() => {
           resolve({
+            title: 'title async loaded',
+            description: 'description async loaded',
             a: 123
           });
         });

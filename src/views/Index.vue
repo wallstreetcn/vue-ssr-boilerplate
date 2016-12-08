@@ -16,6 +16,13 @@ export default {
     };
   },
 
+  metaInfo: {
+    title: 'Vue SSR Boilerplate',
+    meta: [
+      { vmid: 'description', name: 'description', content: 'Vue SSR Boilerplate' }
+    ]
+  },
+
   prefetch() {
     return Promise.resolve({
       a: 123

@@ -10,6 +10,9 @@ import store from './store';
 
 export default {
   router,
-  store
+  store,
+  metaInfo: {
+    titleTemplate: '%s - Company Name'
+  }
 };
 </script>
