@@ -57,6 +57,8 @@ Every thing is the same as developing a SPA, except one thing, you need to defin
 the resolved result will be merge into `this.$data` during rendering.
 The first argument of `prefetch` is the Vuex store object. so you can set some Vuex state in `prefetch`.
 
+And we use [vue-meta](https://github.com/declandewet/vue-meta) to handle `<title>` and `<meta>`s.
+
 `src/views/Index.vue`:
 ```html
 <template>
@@ -75,6 +77,13 @@ export default {
     return {
       a: 0
     };
+  },
+
+  metaInfo: {
+    title: 'Vue SSR Boilerplate',
+    meta: [
+      { vmid: 'description', name: 'description', content: 'Vue SSR Boilerplate' }
+    ]
   },
 
   prefetch() {
@@ -108,12 +117,29 @@ export default {
   </div>
 </template>
 
+<style scoped>
+.foo {
+  color: blue;
+}
+</style>
+
 <script>
 export default {
   data() {
     return {
+      title: '',
+      description: '',
       a: 0,
       config: null
+    };
+  },
+
+  metaInfo() {
+    return {
+      title: this.title,
+      meta: [
+        { vmid: 'description', name: 'description', content: this.description }
+      ]
     };
   },
 
@@ -122,6 +148,8 @@ export default {
       new Promise(resolve => {
         setTimeout(() => {
           resolve({
+            title: 'title async loaded',
+            description: 'description async loaded',
             a: 123
           });
         });
@@ -274,6 +302,12 @@ And we also defined some environment variables using webpack.DefinePlugin:
 ## Why XXX loaders are not configured?
 No dish suits all tastes. Just fork it and add your sass/stylus/typescript/... loaders.
 Or change to your favorite eslint or babel presets.
+
+
+## To-dos
+* Code Splitting.
+  Because Vue doesn't support code splitting in SSR currently (https://github.com/vuejs/vue/issues/4387),
+  so there's no easy way to achieve it. Good news is it's on the [roadmap](https://github.com/vuejs/vue/projects/3).
 
 
 ## Contributing
