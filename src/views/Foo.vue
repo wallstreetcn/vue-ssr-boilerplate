@@ -10,7 +10,7 @@
 
 <style scoped>
 .foo {
-  color: blue;
+  color: blue
 }
 </style>
 
@@ -22,7 +22,7 @@ export default {
       description: '',
       a: 0,
       config: null
-    };
+    }
   },
 
   metaInfo() {
@@ -31,7 +31,7 @@ export default {
       meta: [
         { vmid: 'description', name: 'description', content: this.description }
       ]
-    };
+    }
   },
 
   prefetch(store) {
@@ -42,17 +42,17 @@ export default {
             title: 'title async loaded',
             description: 'description async loaded',
             a: 123
-          });
-        });
+          })
+        })
       }),
 
       store.dispatch('asyncIncrement')
-    ]).then(([componentData]) => componentData);
+    ]).then(([componentData]) => componentData)
   },
 
   // won't run on server side
   beforeMount() {
-    console.log(this.a); //eslint-disable-line
+    console.log(this.a) //eslint-disable-line
 
     /*
     can not be defined in data(),
@@ -66,7 +66,7 @@ export default {
       TARGET: TARGET, //eslint-disable-line
       VERSION: VERSION, //eslint-disable-line
       CONFIG: CONFIG //eslint-disable-line
-    }, null, 2);
+    }, null, 2)
   }
-};
+}
 </script>

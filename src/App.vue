@@ -5,8 +5,8 @@
 </template>
 
 <script>
-import router from './router';
-import store from './store';
+import router from './router'
+import store from './store'
 
 export default {
   router,
@@ -15,5 +15,5 @@ export default {
     title: 'Default Title',
     titleTemplate: '%s - Company Name'
   }
-};
+}
 </script>

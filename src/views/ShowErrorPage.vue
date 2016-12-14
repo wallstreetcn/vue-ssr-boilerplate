@@ -9,17 +9,17 @@ export default {
   data() {
     return {
       foo: 0
-    };
+    }
   },
 
   prefetch() {
-    return Promise.reject();
+    return Promise.reject()
   },
 
   beforeMount() {
     this.prefetched.catch(() => {
-      alert('500 Internal Server Error');
-    });
+      alert('500 Internal Server Error')
+    })
   }
-};
+}
 </script>

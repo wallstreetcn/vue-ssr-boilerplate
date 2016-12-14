@@ -1,3 +1,3 @@
-import 'vue';
-import 'vue-router';
-import 'vuex';
+import 'vue'
+import 'vue-router'
+import 'vuex'

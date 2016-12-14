@@ -1,12 +1,12 @@
-const { resolve } = require('path');
-const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const WriteFilePlugin = require('write-file-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const pkgInfo = require('./package.json');
+const { resolve } = require('path')
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const WriteFilePlugin = require('write-file-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const pkgInfo = require('./package.json')
 
 module.exports = function(options = {}) {
-  const config = require('./config/' + (process.env.npm_config_config || options.config || 'default'));
+  const config = require('./config/' + (process.env.npm_config_config || options.config || 'default'))
 
   const cfg = {
     entry: {
@@ -116,7 +116,11 @@ module.exports = function(options = {}) {
         '~': resolve(__dirname, 'src')
       }
     }
-  };
+  }
+
+  if (options.dev) {
+    cfg.performance = { hints: false }
+  }
 
   if (config.devServer) {
     cfg.devServer = {
@@ -127,8 +131,8 @@ module.exports = function(options = {}) {
       },
 
       proxy: config.devServer.proxy
-    };
+    }
   }
 
-  return cfg;
-};
+  return cfg
+}

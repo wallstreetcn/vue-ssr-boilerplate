@@ -1,9 +1,9 @@
-const { resolve } = require('path');
-const webpack = require('webpack');
-const pkgInfo = require('./package.json');
+const { resolve } = require('path')
+const webpack = require('webpack')
+const pkgInfo = require('./package.json')
 
 module.exports = function(options = {}) {
-  const config = require('./config/' + (process.env.npm_config_config || options.config || 'default'));
+  const config = require('./config/' + (process.env.npm_config_config || options.config || 'default'))
 
   return {
     entry: {
@@ -63,5 +63,5 @@ module.exports = function(options = {}) {
     },
 
     externals: /^[a-z0-9].*$/
-  };
-};
+  }
+}
