@@ -42,7 +42,7 @@ module.exports = function(options = {}) {
 
         {
           test: /\.js$/,
-          exclude: /node_modules/,
+          include: resolve(__dirname, 'src'),
           use: ['babel-loader', 'eslint-loader']
         },
 

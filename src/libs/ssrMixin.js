@@ -1,8 +1,11 @@
 export default {
   created() {
+    if (!this.$options.prefetch) return
+
     if (TARGET === 'web') {
       if (window.__INITIAL_COMPONENTS_STATE__) {
         this.$router.getMatchedComponents().forEach((component, i) => {
+          debugger // eslint-disable-line
           component.__INITIAL_STATE__ = window.__INITIAL_COMPONENTS_STATE__[i]
         })
 
@@ -14,7 +17,7 @@ export default {
       Object.assign(this.$data, this.constructor.extendOptions.__INITIAL_STATE__)
       this.prefetched = Promise.resolve(this.constructor.extendOptions.__INITIAL_STATE__)
       this.constructor.extendOptions.__INITIAL_STATE__ = null
-    } else if (this.$options.prefetch) {
+    } else {
       this.prefetched = this.$options.prefetch(this.$store).then(data => {
         Object.assign(this.$data, data)
         return data

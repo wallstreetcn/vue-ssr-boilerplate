@@ -3,21 +3,24 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-import Index from './views/Index.vue'
-import Foo from './views/Foo.vue'
-import HTTP404 from './views/HTTP404.vue'
-import ShowErrorPage from './views/ShowErrorPage.vue'
+function _import(module) {
+  if (TARGET === 'web') {
+    return () => System.import('./views/' + module + '.vue')
+  } else {
+    return require('./views/' + module + '.vue')
+  }
+}
 
 const routes = [
-  { path: '/', component: Index },
-  { path: '/foo', component: Foo },
-  { path: '/show-error-page', component: ShowErrorPage }
+  { path: '/', component: _import('Index') },
+  { path: '/foo', component: _import('Foo') },
+  { path: '/show-error-page', component: _import('ShowErrorPage') }
 ]
 
 if (TARGET === 'web') {
   routes.push(
     // catch-all route must be placed at the last
-    { path: '*', component: HTTP404 }
+    { path: '*', component: _import('HTTP404') }
   )
 }
 
