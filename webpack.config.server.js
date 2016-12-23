@@ -62,6 +62,8 @@ module.exports = function(options = {}) {
       }
     },
 
-    externals: /^[a-z0-9].*$/
+    externals: /^[a-z0-9].*$/,
+
+    performance: { hints: false }
   }
 }
