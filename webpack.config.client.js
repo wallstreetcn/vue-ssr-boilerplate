@@ -8,7 +8,7 @@ const pkgInfo = require('./package.json')
 module.exports = function(options = {}) {
   const config = require('./config/' + (process.env.npm_config_config || options.config || 'default'))
 
-  const cfg = {
+  return {
     entry: {
       vendor: './src/vendor',
       client: './src/client-entry'
@@ -115,24 +115,19 @@ module.exports = function(options = {}) {
       alias: {
         '~': resolve(__dirname, 'src')
       }
-    }
-  }
+    },
 
-  if (options.dev) {
-    cfg.performance = { hints: false }
-  }
-
-  if (config.devServer) {
-    cfg.devServer = {
+    devServer: config.devServer ? {
       host: '0.0.0.0',
       port: config.devServer.port,
+      proxy: config.devServer.proxy,
       historyApiFallback: {
         index: config.publicPath
-      },
+      }
+    } : undefined,
 
-      proxy: config.devServer.proxy
+    performance: {
+      hints: options.dev ? false : 'warning'
     }
   }
-
-  return cfg
 }
