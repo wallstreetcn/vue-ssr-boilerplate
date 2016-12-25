@@ -5,7 +5,7 @@ const WriteFilePlugin = require('write-file-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const pkgInfo = require('./package.json')
 
-module.exports = function(options = {}) {
+module.exports = (options = {}) => {
   const config = require('./config/' + (process.env.npm_config_config || options.config || 'default'))
 
   return {
