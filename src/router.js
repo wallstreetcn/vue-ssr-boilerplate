@@ -10,7 +10,7 @@ import ShowErrorPage from './views/ShowErrorPage.vue'
 
 const routes = [
   { path: '/', component: Index },
-  { path: '/foo', component: Foo },
+  { path: '/foo/:id', name: 'foo', component: Foo },
   { path: '/show-error-page', component: ShowErrorPage }
 ]
 

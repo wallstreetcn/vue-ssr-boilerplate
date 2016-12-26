@@ -15,7 +15,7 @@ export default {
       this.prefetched = Promise.resolve(this.constructor.extendOptions.__INITIAL_STATE__)
       this.constructor.extendOptions.__INITIAL_STATE__ = null
     } else if (this.$options.prefetch) {
-      this.prefetched = this.$options.prefetch(this.$store).then(data => {
+      this.prefetched = this.$options.prefetch(this.$route, this.$store).then(data => {
         Object.assign(this.$data, data)
         return data
       })

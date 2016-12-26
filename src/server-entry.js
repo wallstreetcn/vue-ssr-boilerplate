@@ -15,7 +15,7 @@ export default context => {
   // Call prefetch hooks on components matched by the route.
   return Promise.all(matchedComponents.map(component => {
     if (component.prefetch) {
-      return component.prefetch(store).then(data => {
+      return component.prefetch(router.currentRoute, store).then(data => {
         component.__INITIAL_STATE__ = data
         return data
       })

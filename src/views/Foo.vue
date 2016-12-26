@@ -1,6 +1,6 @@
 <template>
   <div class="foo">
-    <p>this.a: {{a}}</p>
+    <p>this.id: {{id}}</p>
     <p>this.$store.state.count: {{$store.state.count}}</p>
     <p>Enviroment Variables Defined by webpack.DefinePlugin:</p>
     <pre>{{config}}</pre>
@@ -20,7 +20,7 @@ export default {
     return {
       title: '',
       description: '',
-      a: 0,
+      id: 0,
       config: null
     }
   },
@@ -34,14 +34,14 @@ export default {
     }
   },
 
-  prefetch(store) {
+  prefetch(route, store) {
     return Promise.all([
       new Promise(resolve => {
         setTimeout(() => {
           resolve({
             title: 'title async loaded',
             description: 'description async loaded',
-            a: 123
+            id: route.params.id
           })
         })
       }),
