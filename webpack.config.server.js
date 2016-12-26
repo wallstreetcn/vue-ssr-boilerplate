@@ -24,13 +24,7 @@ module.exports = (options = {}) => {
       rules: [
         {
           test: /\.vue$/,
-          use: ['vue-loader', 'eslint-loader']
-        },
-
-        {
-          test: /\.js$/,
-          exclude: /node_modules/,
-          use: 'eslint-loader'
+          use: 'vue-loader'
         },
 
         {
