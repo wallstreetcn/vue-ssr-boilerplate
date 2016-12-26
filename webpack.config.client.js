@@ -29,15 +29,17 @@ module.exports = (options = {}) => {
             {
               loader: 'vue-loader',
               options: {
+                postcss: [require('autoprefixer')()],
                 loaders: {
                   css: ExtractTextPlugin.extract({
-                    loader: ['css-loader', 'postcss-loader'],
-                    fallbackLoader: 'style-loader'
+                    loader: 'css-loader',
+                    fallbackLoader: 'vue-style-loader'
                   })
                 }
               }
             },
-            'eslint-loader']
+            'eslint-loader'
+          ]
         },
 
         {
