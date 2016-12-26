@@ -1,4 +1,5 @@
-import app from './app'
+import Vue from 'vue'
+import App from './App.vue'
 import router from './router'
 import store from './store'
 
@@ -25,6 +26,7 @@ export default context => {
   })).then(initialComponentsState => {
     context.initialComponentsState = initialComponentsState
     context.initialVuexState = store.state
+    const app = new Vue(App)
     context.meta = app.$meta()
     return app
   })
