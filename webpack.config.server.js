@@ -28,6 +28,12 @@ module.exports = (options = {}) => {
         },
 
         {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          use: 'babel-loader'
+        },
+
+        {
           test: /\.(png|jpg|jpeg|gif|eot|ttf|woff|woff2|svg|svgz)(\?.+)?$/,
           use: [
             {

@@ -15,6 +15,8 @@
 </style>
 
 <script>
+import config from '~/config'
+
 export default {
   data() {
     return {
@@ -58,15 +60,8 @@ export default {
     can not be defined in data(),
     because the TARGET is different between server side (TARGET: node) and client side (TARGET: web)
     and this will cause the client-side rendered virtual DOM tree not matching server-rendered content
-
-    can not use object-shorthand, because the tokens will be replaced by webpack.DefinePlugin
     */
-    this.config = JSON.stringify({
-      DEBUG: DEBUG, //eslint-disable-line
-      TARGET: TARGET, //eslint-disable-line
-      VERSION: VERSION, //eslint-disable-line
-      CONFIG: CONFIG //eslint-disable-line
-    }, null, 2)
+    this.config = JSON.stringify(config, null, 2)
   }
 }
 </script>
