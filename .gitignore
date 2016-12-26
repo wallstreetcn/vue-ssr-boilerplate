@@ -3,7 +3,7 @@ npm-debug.log*
 debug.log
 .DS_Store
 .idea
-conf/*
-!conf/default.js
-!conf/dev.js
+config/*
+!config/default.js
+!config/dev.js
 /tmp

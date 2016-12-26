@@ -4,6 +4,7 @@
   "description": "Vue.js Server Side Rendering Boilerplate without Polluting Vuex",
   "main": "server.js",
   "scripts": {
+    "local": "npm run dev --config=local",
     "dev": "run-p dev:client dev:server dev:mon",
     "dev:brk": "run-p dev:client dev:server dev:mon:brk",
     "dev:client": "webpack-dev-server -d --hot --config webpack.config.client.js --env.dev --env.config dev",
