@@ -2,6 +2,7 @@
   <img width="100"src="src/favicon.png">
 </p>
 
+
 # Vue SSR Boilerplate
 Vue.js Server Side Rendering Boilerplate without Polluting Vuex
 
@@ -22,9 +23,11 @@ Then install npm packages via `npm install`.
 
 
 ## Development
+
 ```sh
 npm run dev
 ```
+
 
 ### without SSR
 http://localhost:8100
@@ -55,11 +58,23 @@ When you start the project, you can visit http://localhost:8100 or http://localh
 Every thing is the same as developing a SPA, except one thing, you need to define a
 `prefetch` method in your component. `prefetch` must return a `Promise`,
 the resolved result will be merge into `this.$data` during rendering.
-The first argument of `prefetch` is the Vuex store object. so you can set some Vuex state in `prefetch`.
+
+```js
+{
+  prefetch(route, store) {
+    // return promise
+  }
+}
+```
+
+The first argument of `prefetch` is the [router.currentRoute](https://router.vuejs.org/en/api/router-instance.html).
+
+The Second argument is Vuex store object. so you can set some Vuex state in `prefetch`.
 
 And we use [vue-meta](https://github.com/declandewet/vue-meta) to handle `<title>` and `<meta>`s.
 
 `src/views/Index.vue`:
+
 ```html
 <template>
   <div class="foo">
@@ -106,10 +121,11 @@ export default {
 ```
 
 `src/views/Foo.vue`:
+
 ```html
 <template>
   <div class="foo">
-    <p>this.a: {{a}}</p>
+    <p>this.id: {{id}}</p>
     <p>this.$store.state.count: {{$store.state.count}}</p>
     <p>Enviroment Variables Defined by webpack.DefinePlugin:</p>
     <pre>{{config}}</pre>
@@ -119,7 +135,7 @@ export default {
 
 <style scoped>
 .foo {
-  color: blue;
+  color: blue
 }
 </style>
 
@@ -129,9 +145,9 @@ export default {
     return {
       title: '',
       description: '',
-      a: 0,
+      id: 0,
       config: null
-    };
+    }
   },
 
   metaInfo() {
@@ -140,28 +156,28 @@ export default {
       meta: [
         { vmid: 'description', name: 'description', content: this.description }
       ]
-    };
+    }
   },
 
-  prefetch(store) {
+  prefetch(route, store) {
     return Promise.all([
       new Promise(resolve => {
         setTimeout(() => {
           resolve({
             title: 'title async loaded',
             description: 'description async loaded',
-            a: 123
-          });
-        });
+            id: route.params.id
+          })
+        })
       }),
 
       store.dispatch('asyncIncrement')
-    ]).then(([componentData]) => componentData);
+    ]).then(([componentData]) => componentData)
   },
 
   // won't run on server side
   beforeMount() {
-    console.log(this.a); //eslint-disable-line
+    console.log(this.a) //eslint-disable-line
 
     /*
     can not be defined in data(),
@@ -175,9 +191,9 @@ export default {
       TARGET: TARGET, //eslint-disable-line
       VERSION: VERSION, //eslint-disable-line
       CONFIG: CONFIG //eslint-disable-line
-    }, null, 2);
+    }, null, 2)
   }
-};
+}
 </script>
 ```
 
@@ -309,6 +325,8 @@ Or change to your favorite eslint or babel presets.
   Because Vue doesn't support code splitting in SSR currently (https://github.com/vuejs/vue/issues/4387),
   so there's no easy way to achieve it. Good news is it's on the [roadmap](https://github.com/vuejs/vue/projects/3).
 
+## Known Issues
+* vue-meta can't work with nested routes ( [vue-meta#42](https://github.com/declandewet/vue-meta/issues/42) ).
 
 ## Contributing
 If you find bugs, please submit issues on github. Pull requests are welcome!
