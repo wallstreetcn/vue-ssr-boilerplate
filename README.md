@@ -207,6 +207,7 @@ And `prefetch` is optional, you can omit it if the component don't need SSR.
 When route is not found on server side, the server will send a HTTP 404 status code, and with `dist/index.html` (yield by html-webpack-plugin from `src/index.html`) as payload. Thus, the page runs as if a SPA without SSR.
 
 We define a catch-all routes in `src/router.js` when code is run in browser:
+
 ```js
 import HTTP404 from './views/HTTP404.vue';
 
@@ -219,6 +220,7 @@ if (TARGET === 'web') {
   );
 }
 ```
+
 So our SPA can serve a Not Found page for that request.
 
 Your can check it at whatever URL that not exists like `http://localhost:8100/page-not-exist`
@@ -238,6 +240,7 @@ When `prefetch` return a rejected promise, the server will send a HTTP 500 statu
 In your component, you can handle it whatever you like.
 
 `src/views/ShowErrorPage.vue`:
+
 ```html
 <template>
   <div class="show-error-page">
@@ -265,6 +268,7 @@ export default {
 };
 </script>
 ```
+
 `this.prefetched` is the promise return by `prefetch` method.
 `prefetch` will be called again during initializing the component in the browser.
 Because the server won't preserve the failed data and rendering the page,
@@ -274,9 +278,11 @@ Checkout `http://localhost:8100/show-error-page` to see effects.
 
 
 ## Build Distribution
+
 ```sh
 npm run build
 ```
+
 That's it.
 
 Files will be output to `dist` folder. In `npm run dev` mode, files are output to `tmp` folder.
@@ -293,16 +299,31 @@ In production, instead of serving static assets by SSR server, you should setup 
 By default, the boilerplate provides two sets of config files.
 `config/dev.js` is used in development mode, `config/default.js` is used in production mode.
 You can override by
+
 ```sh
 npm run dev --config=YOUR-CONFIG-FILE-NAME
 ```
+
 in development.
 
-And
+Or you can use
+
+```sh
+nm run local
+```
+
+which is an alias of
+
+```sh
+npm run dev --config=local
+```
+
+And in production, you can override `default.js` by:
+
 ```sh
 node server.js --config=YOUR-CONFIG-FILE-NAME
 ```
-in production.
+
 
 * `ssrPort`: The port number that the server-side listened on.
 * `publicPath`: `output.publicPath` of webpack.
