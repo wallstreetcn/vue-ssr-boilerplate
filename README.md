@@ -325,15 +325,26 @@ node server.js --config=YOUR-CONFIG-FILE-NAME
 ```
 
 
+### Options in config file:
 * `ssrPort`: The port number that the server-side listened on.
 * `publicPath`: `output.publicPath` of webpack.
-* `serveStaticMountPath`: Mount path of `express.static()`. It's normally the same as `publicPath` without trailing slash.
+* `serveStaticMountPath`: Mount path of `express.static()`.
 
-And we also defined some environment variables using webpack.DefinePlugin:
+   In production environment, it's normally the same as `publicPath` without trailing slash.
+   Needn't set it if you use Nginx to serve static files.
+
+   In development environment, `publicPath` can set to the full URL of webpack-dev-server, e.g, `http://127.0.0.1:8100/assets/`,
+   and needn't set `serveStaticMountPath`.
+
+* `devServer.port`: `devServer.port` of webpack.
+* `devServer.proxy`: `devServer.proxy` of webpack.
+* `runtimeConfig`: Object. Customizable runtime params that can be accessed as `CONFIG` variable in code.
+
+We also defined some environment variables using webpack.DefinePlugin:
 * `DEBUG`: `true` in development, `false` in production.
 * `VERSION`: `version` in `package.json`.
 * `TARGET`: `node` on server-side, `web` on client-side.
-* `CONFIG`: `runtimeConfig` exported by `config/*` files.
+* `CONFIG`: `runtimeConfig` in config file.
 
 
 ## Why XXX loaders are not configured?
