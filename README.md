@@ -32,21 +32,20 @@ npm run dev
 ### without SSR
 http://localhost:8100
 
-It's served by webpack-dev-server.
-I recommend developing in this mode at first. So you can focus on your view things,
-not bother with server side things.
+It's served by webpack-dev-server. I recommend developing in this mode at first. So you can focus on your view things, not bother with server side things.
+
 
 ### with SSR
 http://localhost:8200
 
-When your pages look fine, then you step into SSR mode to check the server side is OK.
-`--inspect` flag is on, so you can debug your server side code using Chrome ( https://nodejs.org/api/debugger.html#debugger_v8_inspector_integration_for_node_js ).
+When your pages look fine, then you step into SSR mode to check the server side is OK. `--inspect` flag is on, so you can debug your server side code using Chrome ( https://nodejs.org/api/debugger.html#debugger_v8_inspector_integration_for_node_js ).
 But codes in `src` folder are run in node VM context, so can not be debugged.
 
 
 ```sh
 npm run dev:brk
 ```
+
 This will break on the first line of `server.js`.
 
 
@@ -55,9 +54,7 @@ When you start the project, you can visit http://localhost:8100 or http://localh
 
 
 ## How to Write Pages
-Every thing is the same as developing a SPA, except one thing, you need to define a
-`prefetch` method in your component. `prefetch` must return a `Promise`,
-the resolved result will be merge into `this.$data` during rendering.
+Every thing is the same as developing a SPA, except one thing, you need to define a `prefetch` method in your component. `prefetch` must return a `Promise`, the resolved result will be merge into `this.$data` during rendering.
 
 ```js
 {
@@ -197,8 +194,7 @@ export default {
 </script>
 ```
 
-`prefetch` is only effective on components which are defined as route components.
-And `prefetch` is optional, you can omit it if the component don't need SSR.
+`prefetch` is only effective on components which are defined as route components. And `prefetch` is optional, you can omit it if the component don't need SSR.
 
 
 ## Handling Errors
@@ -227,11 +223,9 @@ Your can check it at whatever URL that not exists like `http://localhost:8100/pa
 
 
 #### Why not rendering the 404 page on server side?
-Because if we define the catch-all route on server side, then no 404 HTTP status code will be sent.
-The search engine will handle it as a normal response.
+Because if we define the catch-all route on server side, then no 404 HTTP status code will be sent. The search engine will handle it as a normal response.
 
-And it let you resolve a 404 in different ways, such as, in navigation guard of vue-router.
-Also, it simplified the server side code.
+And it let you resolve a 404 in different ways, such as, in navigation guard of vue-router. Also, it simplified the server side code.
 
 
 ### 500 Internal Server Error
@@ -269,10 +263,7 @@ export default {
 </script>
 ```
 
-`this.prefetched` is the promise return by `prefetch` method.
-`prefetch` will be called again during initializing the component in the browser.
-Because the server won't preserve the failed data and rendering the page,
-it give you the flexibility to handle it whatever you like.
+`this.prefetched` is the promise return by `prefetch` method. `prefetch` will be called again during initializing the component in the browser. Because the server won't preserve the failed data and rendering the page, it give you the flexibility to handle it whatever you like.
 
 Checkout `http://localhost:8100/show-error-page` to see effects.
 
@@ -348,20 +339,21 @@ We also defined some environment variables using webpack.DefinePlugin:
 
 
 ## Why XXX loaders are not configured?
-No dish suits all tastes. Just fork it and add your sass/stylus/typescript/... loaders.
-Or change to your favorite eslint or babel presets.
+No dish suits all tastes. Just fork it and add your sass/stylus/typescript/... loaders. Or change to your favorite eslint or babel presets.
 
 
 ## To-dos
-* Code Splitting.
-  Because Vue doesn't support code splitting in SSR currently (https://github.com/vuejs/vue/issues/4387),
+* Code Splitting. Because Vue doesn't support code splitting in SSR currently (https://github.com/vuejs/vue/issues/4387),
   so there's no easy way to achieve it. Good news is it's on the [roadmap](https://github.com/vuejs/vue/projects/3).
 
+
 ## Known Issues
-* vue-meta can't work with nested routes ( [vue-meta#42](https://github.com/declandewet/vue-meta/issues/42) ).
+* renderToStream: first chunk too big cause vue-meta can't get correct meta info of child components ( [vue-meta#44](https://github.com/declandewet/vue-meta/issues/44) ).
+
 
 ## Contributing
 If you find bugs, please submit issues on github. Pull requests are welcome!
+
 
 ## License
 [MIT](http://opensource.org/licenses/MIT)
