@@ -17,6 +17,10 @@ Vue.js Server Side Rendering Boilerplate without Polluting Vuex
 * And so on.
 
 
+## Environments
+* Node.js >= 7 (maybe node 6 will work, haven't tested)
+
+
 ## Initialize
 First, download or clone this project.
 
