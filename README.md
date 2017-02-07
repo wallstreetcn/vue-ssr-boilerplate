@@ -13,6 +13,7 @@ Vue.js Server Side Rendering Boilerplate without Polluting Vuex
 * Customizable webpack config.
 * Hot module replacement.
 * Codes can run with or without SSR.
+* Lazy Loading Routes.
 * And so on.
 
 
@@ -340,11 +341,6 @@ We also defined some environment variables using webpack.DefinePlugin:
 
 ## Why XXX loaders are not configured?
 No dish suits all tastes. Just fork it and add your sass/stylus/typescript/... loaders. Or change to your favorite eslint or babel presets.
-
-
-## To-dos
-* Code Splitting. Because Vue doesn't support code splitting in SSR currently (https://github.com/vuejs/vue/issues/4387),
-  so there's no easy way to achieve it. Good news is it's on the [roadmap](https://github.com/vuejs/vue/projects/3).
 
 
 ## Known Issues
