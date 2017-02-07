@@ -13,7 +13,7 @@ Vue.js Server Side Rendering Boilerplate without Polluting Vuex
 * Customizable webpack config.
 * Hot module replacement.
 * Codes can run with or without SSR.
-* Lazy Loading Routes.
+* Lazy loading routes.
 * And so on.
 
 
@@ -89,7 +89,7 @@ export default {
   data() {
     return {
       a: 0
-    };
+    }
   },
 
   metaInfo: {
@@ -102,19 +102,19 @@ export default {
   prefetch() {
     return Promise.resolve({
       a: 123
-    });
+    })
   },
 
   // will be called on server side. check your console
   created() {
-    console.log(this.a); //eslint-disable-line
+    console.log(this.a) //eslint-disable-line
   },
 
   // won't run on server side
   beforeMount() {
-    console.log(this.a); //eslint-disable-line
+    console.log(this.a) //eslint-disable-line
   }
-};
+}
 </script>
 ```
 
@@ -206,15 +206,11 @@ When route is not found on server side, the server will send a HTTP 404 status c
 We define a catch-all routes in `src/router.js` when code is run in browser:
 
 ```js
-import HTTP404 from './views/HTTP404.vue';
-
-// ...
-
 if (TARGET === 'web') {
   routes.push(
     // catch-all route must be placed at the last
-    { path: '*', component: HTTP404 }
-  );
+    { path: '*', component: _import('HTTP404') }
+  )
 }
 ```
 
@@ -248,19 +244,19 @@ export default {
   data() {
     return {
       foo: 0
-    };
+    }
   },
 
   prefetch() {
-    return Promise.reject();
+    return Promise.reject()
   },
 
   beforeMount() {
     this.prefetched.catch(() => {
-      alert('500 Internal Server Error');
-    });
+      alert('500 Internal Server Error')
+    })
   }
-};
+}
 </script>
 ```
 
@@ -343,8 +339,8 @@ We also defined some environment variables using webpack.DefinePlugin:
 No dish suits all tastes. Just fork it and add your sass/stylus/typescript/... loaders. Or change to your favorite eslint or babel presets.
 
 
-## Known Issues
-* renderToStream: first chunk too big cause vue-meta can't get correct meta info of child components ( [vue-meta#44](https://github.com/declandewet/vue-meta/issues/44) ).
+## Why not use renderToStream?
+vue-meta has some problems with `renderToStream`. If the first chunk is too big, vue-meta can't get correct meta info of child components ( [vue-meta#44](https://github.com/declandewet/vue-meta/issues/44) ). We switched back to `renderToString` until this issue be fixed.
 
 
 ## Contributing

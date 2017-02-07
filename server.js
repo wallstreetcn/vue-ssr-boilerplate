@@ -54,9 +54,21 @@ app.get('*', (req, res) => {
     url: req.url
   }
 
-  const renderStream = renderer.renderToStream(context)
+  renderer.renderToString(context, (err, html) => {
+    if (err) {
+      if (err.code === '404') {
+        // let client to render a 404 page
+        res.status(404).end(indexHtml.entire)
+      } else {
+        // let client to render a 500 page
+        res.status(500).end(indexHtml.entire)
+        console.error(`error during render : ${req.url}`) // eslint-disable-line
+        console.error(err) // eslint-disable-line
+      }
 
-  renderStream.once('data', () => {
+      return
+    }
+
     const { title, htmlAttrs, bodyAttrs, link, style, script, noscript, meta } = context.meta.inject()
 
     res.write(`
@@ -68,15 +80,7 @@ app.get('*', (req, res) => {
       ${script.text()}
       ${noscript.text()}
       ${indexHtml.headCloseAndBodyOpen} ${bodyAttrs.text()} ${indexHtml.bodyOpenTailAndContentBeforeApp}
-    `)
-  })
-
-  renderStream.on('data', chunk => {
-    res.write(chunk)
-  })
-
-  renderStream.on('end', () => {
-    res.write(`
+      ${html}
       <script>
         window.__INITIAL_COMPONENTS_STATE__ = ${JSON.stringify(context.initialComponentsState)}
         window.__INITIAL_VUEX_STATE__ = ${JSON.stringify(context.initialVuexState)}
@@ -85,18 +89,6 @@ app.get('*', (req, res) => {
     `)
 
     res.end()
-  })
-
-  renderStream.on('error', err => {
-    if (err && err.code === '404') {
-      // let client to render a 404 page
-      res.status(404).end(indexHtml.entire)
-    } else {
-      // let client to render a 500 page
-      res.status(500).end(indexHtml.entire)
-      console.error(`error during render : ${req.url}`) // eslint-disable-line
-      console.error(err) // eslint-disable-line
-    }
   })
 })
 
