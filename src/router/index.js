@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
+// can't put import() here, because node will complain "SyntaxError: Unexpected token import"
 const _import = require('./_import_' + TARGET)
 
 Vue.use(Router)
