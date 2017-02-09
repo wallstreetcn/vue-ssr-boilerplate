@@ -33,8 +33,8 @@ module.exports = (options = {}) => {
                 postcss: [require('autoprefixer')()],
                 loaders: {
                   css: ExtractTextPlugin.extract({
-                    loader: 'css-loader',
-                    fallbackLoader: 'vue-style-loader'
+                    use: 'css-loader',
+                    fallback: 'vue-style-loader'
                   })
                 }
               }
