@@ -125,7 +125,8 @@ module.exports = (options = {}) => {
       port: config.devServer.port,
       proxy: config.devServer.proxy,
       historyApiFallback: {
-        index: url.parse(config.publicPath).pathname
+        index: url.parse(config.publicPath).pathname,
+        disableDotRule: true
       }
     } : undefined,
 
