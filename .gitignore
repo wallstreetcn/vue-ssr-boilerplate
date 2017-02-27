@@ -2,6 +2,7 @@ node_modules
 npm-debug.log*
 .DS_Store
 .idea
+.vscode
 conf/*
 !conf/default.js
 !conf/dev.js

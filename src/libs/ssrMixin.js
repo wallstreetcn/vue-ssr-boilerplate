@@ -5,7 +5,6 @@ export default {
     if (TARGET === 'web') {
       if (window.__INITIAL_COMPONENTS_STATE__) {
         this.$router.getMatchedComponents().forEach((component, i) => {
-          debugger // eslint-disable-line
           component.__INITIAL_STATE__ = window.__INITIAL_COMPONENTS_STATE__[i]
         })
 
