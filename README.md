@@ -131,7 +131,7 @@ export default {
     <p>this.$store.state.count: {{$store.state.count}}</p>
     <p>Enviroment Variables Defined by webpack.DefinePlugin:</p>
     <pre>{{config}}</pre>
-    <p><router-link to="/">goto /</router-link>
+    <p><router-link to="/">goto /</router-link></p>
   </div>
 </template>
 
