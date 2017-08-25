@@ -1,13 +1,14 @@
 const { resolve } = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 const WriteFilePlugin = require('write-file-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const pkgInfo = require('./package.json')
 const url = require('url')
+const { execSync } = require('child_process')
 
 module.exports = (options = {}) => {
-  const config = require('./config/' + (process.env.npm_config_config || options.config || 'default'))
+  const env = require('./config/' + (process.env.npm_config_config || options.config || 'default'))
+  const version = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim()
 
   return {
     entry: {
@@ -17,9 +18,9 @@ module.exports = (options = {}) => {
 
     output: {
       path: resolve(__dirname, options.dev ? 'tmp' : 'dist'),
-      filename: options.dev ? '[name].js' : '[name].js?[chunkhash]',
-      chunkFilename: '[id].js?[chunkhash]',
-      publicPath: config.publicPath
+      filename: options.dev ? '[name].js' : '[name].[chunkhash].js',
+      chunkFilename: '[id].[chunkhash].js',
+      publicPath: env.publicPath
     },
 
     module: {
@@ -30,15 +31,10 @@ module.exports = (options = {}) => {
             {
               loader: 'vue-loader',
               options: {
-                postcss: [require('autoprefixer')()],
-                loaders: {
-                  css: ExtractTextPlugin.extract({
-                    use: 'css-loader',
-                    fallback: 'vue-style-loader'
-                  })
-                }
+                esModule: false
               }
             },
+
             'eslint-loader'
           ]
         },
@@ -68,7 +64,7 @@ module.exports = (options = {}) => {
             {
               loader: 'file-loader',
               options: {
-                name: '[name].[ext]?[hash]'
+                name: '[name].[hash].[ext]'
               }
             }
           ]
@@ -90,42 +86,43 @@ module.exports = (options = {}) => {
     },
 
     plugins: [
+      new webpack.DefinePlugin({
+        DEBUG: Boolean(options.dev),
+        TARGET: '"web"',
+        CONFIG: JSON.stringify(Object.assign({ version }, env.runtimeConfig))
+      }),
+
       new HtmlWebpackPlugin({
         template: 'src/index.html'
+      }),
+
+      new HtmlWebpackPlugin({
+        template: 'src/index-ssr.html',
+        filename: 'index-ssr.html',
+        inject: false
       }),
 
       new webpack.optimize.CommonsChunkPlugin({
         names: ['vendor', 'manifest']
       }),
 
-      new webpack.DefinePlugin({
-        DEBUG: Boolean(options.dev),
-        TARGET: '"web"',
-        VERSION: JSON.stringify(pkgInfo.version),
-        CONFIG: JSON.stringify(config.runtimeConfig)
-      }),
+      new VueSSRClientPlugin(),
 
-      new WriteFilePlugin(),
-
-      new ExtractTextPlugin({
-        filename: '[name].css?[contenthash]',
-        allChunks: true,
-        disable: options.dev
-      })
+      new WriteFilePlugin()
     ],
 
     resolve: {
       alias: {
-        '~': resolve(__dirname, 'src')
+        src: resolve(__dirname, 'src')
       }
     },
 
-    devServer: config.devServer ? {
+    devServer: env.devServer ? {
       host: '0.0.0.0',
-      port: config.devServer.port,
-      proxy: config.devServer.proxy,
+      port: env.devServer.port,
+      proxy: env.devServer.proxy,
       historyApiFallback: {
-        index: url.parse(config.publicPath).pathname,
+        index: url.parse(env.publicPath).pathname,
         disableDotRule: true
       }
     } : undefined,

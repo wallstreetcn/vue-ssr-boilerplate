@@ -1,9 +1,11 @@
 const { resolve } = require('path')
 const webpack = require('webpack')
-const pkgInfo = require('./package.json')
+const VueSSRServerPlugin = require('vue-server-renderer/server-plugin')
+const { execSync } = require('child_process')
 
 module.exports = (options = {}) => {
-  const config = require('./config/' + (process.env.npm_config_config || options.config || 'default'))
+  const env = require('./config/' + (process.env.npm_config_config || options.config || 'default'))
+  const version = execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim()
 
   return {
     entry: {
@@ -14,9 +16,9 @@ module.exports = (options = {}) => {
 
     output: {
       path: resolve(__dirname, options.dev ? 'tmp' : 'dist'),
-      filename: options.dev ? '[name].js' : '[name].js?[chunkhash]',
-      chunkFilename: '[id].js?[chunkhash]',
-      publicPath: config.publicPath,
+      filename: options.dev ? '[name].js' : '[name].[chunkhash].js',
+      chunkFilename: '[id].[chunkhash].js',
+      publicPath: env.publicPath,
       libraryTarget: 'commonjs2'
     },
 
@@ -25,12 +27,6 @@ module.exports = (options = {}) => {
         {
           test: /\.vue$/,
           use: 'vue-loader'
-        },
-
-        {
-          test: /\.js$/,
-          exclude: /node_modules/,
-          use: 'babel-loader'
         },
 
         {
@@ -51,14 +47,15 @@ module.exports = (options = {}) => {
       new webpack.DefinePlugin({
         DEBUG: Boolean(options.dev),
         TARGET: '"node"',
-        VERSION: JSON.stringify(pkgInfo.version),
-        CONFIG: JSON.stringify(config.runtimeConfig)
-      })
+        CONFIG: JSON.stringify(Object.assign({ version }, env.runtimeConfig))
+      }),
+
+      new VueSSRServerPlugin()
     ],
 
     resolve: {
       alias: {
-        '~': resolve(__dirname, 'src')
+        src: resolve(__dirname, 'src')
       }
     },
 

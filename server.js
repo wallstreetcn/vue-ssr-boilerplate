@@ -1,9 +1,11 @@
+process.chdir(__dirname)
+
 const { argv } = require('yargs')
 const fs = require('fs')
-const express = require('express')
+const Koa = require('koa')
+const serveStatic = require('koa-static')
+const mount = require('koa-mount')
 const { createBundleRenderer } = require('vue-server-renderer')
-
-process.chdir(__dirname)
 
 let distDir
 if (argv.dev) {
@@ -18,80 +20,47 @@ const configFile = process.env.npm_config_config || argv.config || 'default'
 console.log(`loading config ${configFile}`) // eslint-disable-line
 const config = require('./config/' + configFile)
 
-const bundle = fs.readFileSync(`${distDir}/server.js`, 'utf8')
-const renderer = createBundleRenderer(bundle)
+const clientTemplate = fs.readFileSync(`${distDir}/index.html`, 'utf8')
+const template = fs.readFileSync(`${distDir}/index-ssr.html`, 'utf8')
+const serverBundle = require(`${distDir}/vue-ssr-server-bundle.json`)
+const clientManifest = require(`${distDir}/vue-ssr-client-manifest.json`)
 
-function parseIndexHtml() {
-  const [
-    entire,
-    htmlOpen,
-    htmlOpenTailAndHead,
-    headCloseAndBodyOpen,
-    bodyOpenTailAndContentBeforeApp,
-    contentAfterAppAndHtmlClose
-  ] = fs.readFileSync(`${distDir}/index.html`, 'utf8').match(/^([\s\S]+?<html)([\s\S]+?)(<\/head>[\s\S]*?<body)([\s\S]+?)<div id="?app"?><\/div>([\s\S]+)$/)
+const renderer = createBundleRenderer(serverBundle, {
+  runInNewContext: false,
+  template,
+  clientManifest
+})
 
-  return {
-    entire,
-    htmlOpen,
-    htmlOpenTailAndHead,
-    headCloseAndBodyOpen,
-    bodyOpenTailAndContentBeforeApp,
-    contentAfterAppAndHtmlClose
-  }
-}
-
-const indexHtml = parseIndexHtml()
-
-const app = express()
+const app = new Koa()
 
 if (config.serveStaticMountPath) {
-  app.use(config.serveStaticMountPath, express.static(distDir))
+  app.use(mount(config.serveStaticMountPath, serveStatic(distDir)))
 }
 
-app.get('*', (req, res) => {
+app.use(async ctx => {
   const context = {
-    url: req.url
+    url: ctx.url
   }
 
   renderer.renderToString(context, (err, html) => {
     if (err) {
-      if (err.code === '404') {
-        // let client to render a 404 page
-        res.status(404).end(indexHtml.entire)
+      if (err.code === 404) {
+        ctx.status = 404
       } else {
-        // let client to render a 500 page
-        res.status(500).end(indexHtml.entire)
-        console.error(`error during render : ${req.url}`) // eslint-disable-line
+        ctx.status = 500
+
+        console.error(`error during render : ${ctx.url}`) // eslint-disable-line
         console.error(err) // eslint-disable-line
       }
 
-      return
+      // let client to render the error page
+      ctx.body = clientTemplate
+    } else {
+      ctx.body = html
     }
-
-    const { title, htmlAttrs, bodyAttrs, link, style, script, noscript, meta } = context.meta.inject()
-
-    res.write(`
-      ${indexHtml.htmlOpen} data-vue-meta-server-rendered ${htmlAttrs.text()} ${indexHtml.htmlOpenTailAndHead}
-      ${meta.text()}
-      ${title.text()}
-      ${link.text()}
-      ${style.text()}
-      ${script.text()}
-      ${noscript.text()}
-      ${indexHtml.headCloseAndBodyOpen} ${bodyAttrs.text()} ${indexHtml.bodyOpenTailAndContentBeforeApp}
-      ${html}
-      <script>
-        window.__INITIAL_COMPONENTS_STATE__ = ${JSON.stringify(context.initialComponentsState)}
-        window.__INITIAL_VUEX_STATE__ = ${JSON.stringify(context.initialVuexState)}
-      </script>
-      ${indexHtml.contentAfterAppAndHtmlClose}
-    `)
-
-    res.end()
   })
 })
 
 app.listen(config.ssrPort, () => {
-  console.log(`server started at port ${config.ssrPort}`) // eslint-disable-line
+  console.log(`Server started at port ${config.ssrPort}`) // eslint-disable-line
 })
