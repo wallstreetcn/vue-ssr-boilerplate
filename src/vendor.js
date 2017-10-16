@@ -1,3 +1,5 @@
+import 'regenerator-runtime/runtime'
 import 'vue'
-import 'vue-router'
-import 'vuex'
+import 'vue-stateful-router/PathRouter'
+import 'vue-light-store'
+import 'vue-head-mixin'

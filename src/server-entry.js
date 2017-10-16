@@ -1,31 +1,40 @@
 import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
+import App from './App'
+import createRouter from './router'
+import createStore from './store'
 
-export default context => {
-  router.push(context.url)
+export default context =>
+  new Promise((resolve, reject) => {
+    const store = context.store = createStore()
+    const router = context.router = createRouter({ store })
 
-  const matchedComponents = router.getMatchedComponents()
+    router.on('beforeChange', to => {
+      if (to.meta.httpStatus === 404) {
+        reject({ code: 404 })
+        return false
+      }
 
-  // no matched routes
-  if (!matchedComponents.length) return Promise.reject({ code: '404' })
+      if (!to.meta.ssr) {
+        reject({ code: 0 })
+        return false
+      }
+    })
 
-  // Call prefetch hooks on components matched by the route.
-  return Promise.all(matchedComponents.map(component => {
-    if (component.prefetch) {
-      return component.prefetch(router.currentRoute, store).then(data => {
-        component.__INITIAL_STATE__ = data
-        return data
-      })
-    } else {
-      return null
-    }
-  })).then(initialComponentsState => {
-    context.initialComponentsState = initialComponentsState
-    context.initialVuexState = store.state
-    const app = new Vue(App)
-    context.meta = app.$meta()
-    return app
+    router.on('load', route => {
+      const app = new Vue({ ...App, router, store })
+      context.state = {
+        asyncData: route.asyncData,
+        storeState: store.$state
+      }
+      context.title = app.title
+      resolve(app)
+    })
+
+    router.on('error', e => reject(e))
+
+    router.start({
+      path: context.url,
+      external: true,
+      context
+    })
   })
-}

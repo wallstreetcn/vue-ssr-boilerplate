@@ -4,25 +4,24 @@
 
 
 # Vue SSR Boilerplate
-Vue.js Server Side Rendering Boilerplate without Polluting Vuex
+A progressive Vue.js Server Side Rendering Boilerplate.
 
 
 ## Features:
-* Doesn't dependent on Vuex. Putting every thing into Vuex is so ugly.
-* Vuex is there, global states can still put into Vuex store.
+* Doesn't dependent on global data store, component's data still in component as usual.
+* The project can start with or without SSR.
+* You can choose which pages should run on server side. Pages do not need SEO, e.g, user profile page, can run on client side.
 * Customizable webpack config.
 * Hot module replacement.
-* Codes can run with or without SSR.
 * Lazy loading routes.
-* And so on.
 
 
 ## Environments
-* Node.js >= 7 (maybe node 6 will work, haven't tested)
+* Node.js >= 7.10
 
 
 ## Initialize
-First, download or clone this project.
+Firstly, download or clone this project.
 
 Then install npm packages via `npm install`.
 
@@ -34,16 +33,16 @@ npm run dev
 ```
 
 
-### without SSR
+### Run without SSR
 http://localhost:8100
 
-It's served by webpack-dev-server. I recommend developing in this mode at first. So you can focus on your view things, not bother with server side things.
+It's served by webpack-dev-server.
 
 
-### with SSR
+### Run with SSR
 http://localhost:8200
 
-When your pages look fine, then you step into SSR mode to check the server side is OK. `--inspect` flag is on, so you can debug your server side code using Chrome ( https://nodejs.org/api/debugger.html#debugger_v8_inspector_integration_for_node_js ).
+`--inspect` flag is on, so you can debug your server side code using Chrome ( https://nodejs.org/api/debugger.html#debugger_v8_inspector_integration_for_node_js ).
 But codes in `src` folder are run in node VM context, so can not be debugged.
 
 
@@ -59,19 +58,30 @@ When you start the project, you can visit http://localhost:8100 or http://localh
 
 
 ## How to Write Pages
-Every thing is the same as developing a SPA, except one thing, you need to define a `prefetch` method in your component. `prefetch` must return a `Promise`, the resolved result will be merge into `this.$data` during rendering.
+Every thing is the same as developing a SPA, except one thing, you need to define a `asyncData` method in your component instead of `data`. `asyncData` must return a `Promise` that finally resolve to a data object. You can think it's the async version of `data`
 
 ```js
 {
-  prefetch(route, store) {
-    // return promise
+  asyncData(route, context) {
+    return new Promise(resolve => {
+      resolve({
+        foo: 1
+      })
+    })
   }
 }
 ```
 
-The first argument of `prefetch` is the [router.currentRoute](https://router.vuejs.org/en/api/router-instance.html).
 
-The Second argument is Vuex store object. so you can set some Vuex state in `prefetch`.
+* route: Current route object. See: https://github.com/fenivana/vue-stateful-router#the-route-object
+* context: The SSR context. Containing the store object and html meta. You can set store's state in `asyncData` method. See: https://github.com/fenivana/vue-light-store
+```
+{
+  store,
+  title,
+  meta
+}
+```
 
 And we use [vue-meta](https://github.com/declandewet/vue-meta) to handle `<title>` and `<meta>`s.
 

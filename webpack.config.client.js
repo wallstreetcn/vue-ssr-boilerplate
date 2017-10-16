@@ -27,22 +27,34 @@ module.exports = (options = {}) => {
       rules: [
         {
           test: /\.vue$/,
+          use: ['vue-loader', 'eslint-loader']
+        },
+
+        {
+          test: /\.js$/,
+          include: resolve(__dirname, 'src'),
           use: [
             {
-              loader: 'vue-loader',
+              loader: 'babel-loader',
               options: {
-                esModule: false
+                presets: [
+                  [
+                    'env',
+                    {
+                      loose: true,
+                      modules: false
+                    }
+                  ],
+                  'stage-2'
+                ],
+                plugins: [
+                  'transform-vue-jsx'
+                ]
               }
             },
 
             'eslint-loader'
           ]
-        },
-
-        {
-          test: /\.js$/,
-          exclude: /node_modules/,
-          use: ['babel-loader', 'eslint-loader']
         },
 
         {
@@ -112,6 +124,10 @@ module.exports = (options = {}) => {
     ],
 
     resolve: {
+      mainFiles: ['index', 'Index'],
+
+      extensions: ['.js', '.json', '.client.vue', '.vue'],
+
       alias: {
         src: resolve(__dirname, 'src')
       }

@@ -1,7 +1,7 @@
 {
-  "name": "vue-ssr-boilerplate",
+  "name": "vue-stateful-router-ssr-example",
   "version": "0.1.0",
-  "description": "Vue.js Server Side Rendering Boilerplate without Polluting Vuex",
+  "description": "Vue stateful router SSR example",
   "main": "server.js",
   "scripts": {
     "local": "npm run dev --config=local",
@@ -9,53 +9,41 @@
     "dev:brk": "run-p dev:client dev:server dev:mon:brk",
     "dev:client": "webpack-dev-server -d --hot --config webpack.config.client.js --env.dev --env.config dev",
     "dev:server": "webpack -w --config webpack.config.server.js --env.dev --env.config dev",
-    "dev:mon": "node -e \"setTimeout(()=>{}, 8000)\" && nodemon --inspect --ignore src/ server.js -- --dev --config dev",
-    "dev:mon:brk": "node -e \"setTimeout(()=>{}, 8000)\" && nodemon --inspect --debug-brk --ignore src/ server.js -- --dev --config dev",
-    "build": "rimraf dist && webpack --config webpack.config.server.js && webpack -p --config webpack.config.client.js",
+    "dev:mon": "node -e \"setTimeout(()=>{}, 8000)\" && nodemon --inspect --watch server.js --watch tmp/manifest.js server.js -- --dev --config dev",
+    "dev:mon:brk": "node -e \"setTimeout(()=>{}, 8000)\" && nodemon --inspect --debug-brk --watch server.js --watch tmp/manifest.js server.js -- --dev --config dev",
+    "build": "webpack --config webpack.config.server.js && webpack -p --config webpack.config.client.js",
     "start": "node server.js"
   },
   "author": "Jiang Fengming",
   "license": "MIT",
   "devDependencies": {
-    "autoprefixer": "7.1.2",
+    "autoprefixer": "7.1.4",
     "babel-core": "6.26.0",
-    "babel-eslint": "7.2.3",
+    "babel-eslint": "8.0.0",
+    "babel-helper-vue-jsx-merge-props": "2.0.2",
     "babel-loader": "7.1.2",
-    "babel-preset-latest": "6.24.1",
+    "babel-plugin-syntax-jsx": "6.18.0",
+    "babel-plugin-transform-vue-jsx": "3.5.0",
+    "babel-preset-env": "1.6.0",
     "babel-preset-stage-2": "6.24.1",
-    "css-loader": "0.28.5",
-    "eslint": "4.5.0",
+    "css-loader": "0.28.7",
+    "eslint": "4.7.0",
     "eslint-config-enough": "0.2.8",
     "eslint-loader": "1.9.0",
-    "eslint-plugin-html": "3.2.0",
+    "eslint-plugin-html": "3.2.2",
     "extract-text-webpack-plugin": "3.0.0",
     "file-loader": "0.11.2",
     "html-loader": "0.5.1",
     "html-webpack-plugin": "2.30.1",
-    "nodemon": "1.11.0",
-    "npm-run-all": "4.0.2",
+    "nodemon": "1.12.1",
+    "npm-run-all": "4.1.1",
     "postcss-loader": "2.0.6",
-    "rimraf": "2.6.1",
     "url-loader": "0.5.9",
     "vue-loader": "13.0.4",
-    "vue-template-compiler": "2.4.2",
-    "webpack": "3.5.5",
-    "webpack-dev-server": "2.7.1",
+    "vue-template-compiler": "2.4.4",
+    "webpack": "3.6.0",
+    "webpack-dev-server": "2.8.2",
     "write-file-webpack-plugin": "4.1.0"
-  },
-  "babel": {
-    "presets": [
-      [
-        "latest",
-        {
-          "es2015": {
-            "loose": true,
-            "modules": false
-          }
-        }
-      ],
-      "stage-2"
-    ]
   },
   "eslintConfig": {
     "parser": "babel-eslint",
@@ -70,7 +58,6 @@
     "globals": {
       "DEBUG": false,
       "TARGET": false,
-      "VERSION": false,
       "CONFIG": false
     }
   },
@@ -78,21 +65,11 @@
     "koa": "2.3.0",
     "koa-mount": "3.0.0",
     "koa-static": "4.0.1",
-    "vue": "2.4.2",
-    "vue-server-renderer": "2.4.2",
-    "yargs": "8.0.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/fenivana/vue-ssr-boilerplate.git"
-  },
-  "keywords": [
-    "vue",
-    "server side rendering",
-    "ssr"
-  ],
-  "bugs": {
-    "url": "https://github.com/fenivana/vue-ssr-boilerplate/issues"
-  },
-  "homepage": "https://github.com/fenivana/vue-ssr-boilerplate#readme"
+    "regenerator-runtime": "0.11.0",
+    "vue": "2.4.4",
+    "vue-head-mixin": "0.1.1",
+    "vue-light-store": "0.2.4",
+    "vue-server-renderer": "2.4.4",
+    "yargs": "9.0.1"
+  }
 }

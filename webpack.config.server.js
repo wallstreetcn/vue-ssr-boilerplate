@@ -2,6 +2,7 @@ const { resolve } = require('path')
 const webpack = require('webpack')
 const VueSSRServerPlugin = require('vue-server-renderer/server-plugin')
 const { execSync } = require('child_process')
+const { readdirSync } = require('fs')
 
 module.exports = (options = {}) => {
   const env = require('./config/' + (process.env.npm_config_config || options.config || 'default'))
@@ -30,6 +31,20 @@ module.exports = (options = {}) => {
         },
 
         {
+          test: /\.js$/,
+          include: resolve(__dirname, 'src'),
+          use: [
+            {
+              loader: 'babel-loader',
+              options: {
+                presets: ['stage-2'],
+                plugins: ['transform-vue-jsx']
+              }
+            }
+          ]
+        },
+
+        {
           test: /\.(png|jpg|jpeg|gif|eot|ttf|woff|woff2|svg|svgz)(\?.+)?$/,
           use: [
             {
@@ -54,12 +69,16 @@ module.exports = (options = {}) => {
     ],
 
     resolve: {
+      mainFiles: ['index', 'Index'],
+
+      extensions: ['.js', '.json', '.server.vue', '.vue'],
+
       alias: {
         src: resolve(__dirname, 'src')
       }
     },
 
-    externals: /^[a-z0-9].*$/,
+    externals: readdirSync('node_modules').filter(x => x !== '.bin'),
     performance: { hints: false }
   }
 }

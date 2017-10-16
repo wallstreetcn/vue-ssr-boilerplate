@@ -1,9 +1,19 @@
 import Vue from 'vue'
-import App from './App.vue'
-import store from './store'
-import router from './router'
+import App from './App'
+import createStore from './store'
+import createRouter from './router'
 
-if (window.__INITIAL_VUEX_STATE__) store.replaceState(window.__INITIAL_VUEX_STATE__)
+const store = createStore()
+const router = createRouter({ store })
 
-const app = new Vue(App)
-router.onReady(() => app.$mount('#app'))
+const ssrData = window.__INITIAL_STATE__ || {}
+if (ssrData.storeState) store.$setState(ssrData.storeState)
+
+router.once('load', () => new Vue({ ...App, router, store }).$mount('#app'))
+
+router.start({
+  path: ssrData.redirect || location.href,
+  external: !ssrData.redirect,
+  asyncData: ssrData.asyncData,
+  state: ssrData.routeState
+})
