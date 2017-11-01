@@ -9,10 +9,10 @@
 
 <script>
 export default {
-  asyncData(route, { store }) {
+  asyncData(route) {
     return new Promise(resolve => {
       setTimeout(() => {
-        store.foo.setA(234)
+        route.context.store.foo.setA(234)
         resolve({ foo: 1 })
       }, 1)
     })

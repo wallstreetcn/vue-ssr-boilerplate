@@ -6,9 +6,9 @@ import createStore from './store'
 export default context =>
   new Promise((resolve, reject) => {
     const store = context.store = createStore()
-    const router = context.router = createRouter({ store })
 
-    router.on('beforeChange', to => {
+    // check meta.httpStatus and meta.ssr before all other hooks
+    const router = context.router = createRouter(context, to => {
       if (to.meta.httpStatus === 404) {
         reject({ code: 404 })
         return false

@@ -24,6 +24,13 @@ const routes = [
   }
 ]
 
-export default function(context) {
-  return new Router({ routes, context })
+export default function(context, beforeChange) {
+  const router = new Router({ routes, context })
+
+  // register before all other beforeChange hooks
+  if (beforeChange) {
+    router.on('beforeChange', beforeChange)
+  }
+
+  return router
 }

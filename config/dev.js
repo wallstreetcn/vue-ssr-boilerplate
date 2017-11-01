@@ -1,7 +1,6 @@
 module.exports = {
   runtimeConfig: {
-    settingFoo: true,
-    settingBar: false
+    API_BASE: 'https://hacker-news.firebaseio.com/v0/'
   },
 
   ssrPort: 8200,
@@ -9,19 +8,6 @@ module.exports = {
   publicPath: 'http://127.0.0.1:8100/assets/',
 
   devServer: {
-    port: 8100,
-    proxy: {
-      '/api/auth/': {
-        target: 'http://api.example.dev',
-        changeOrigin: true,
-        pathRewrite: { '^/api': '' }
-      },
-
-      '/api/pay/': {
-        target: 'http://pay.example.dev',
-        changeOrigin: true,
-        pathRewrite: { '^/api': '' }
-      }
-    }
+    port: 8100
   }
 }

@@ -1,7 +1,6 @@
 module.exports = {
   runtimeConfig: {
-    settingFoo: true,
-    settingBar: false
+    API_BASE: 'https://hacker-news.firebaseio.com/v0/'
   },
 
   ssrPort: 8200,
