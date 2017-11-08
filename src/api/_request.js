@@ -1,6 +1,12 @@
 import { API_BASE } from 'src/config'
 
 async function _fetch(url, opts) {
+  opts.headers = {
+    ...opts.headers,
+    Accept: 'application/vnd.api+json',
+    'Content-Type': 'application/vnd.api+json'
+  }
+
   const res = await fetch(API_BASE + url, opts)
   if (!res.ok) throw res
 

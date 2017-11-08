@@ -1,6 +1,6 @@
 module.exports = {
   runtimeConfig: {
-    API_BASE: 'https://hacker-news.firebaseio.com/v0/'
+    API_BASE: 'https://kitsu.io/api/edge'
   },
 
   ssrPort: 8200,
