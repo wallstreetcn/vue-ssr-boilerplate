@@ -1,7 +1,7 @@
 export default {
   created() {
     if (TARGET === 'web') {
-      if (window.__INITIAL_COMPONENTS_STATE__ & this.$router) {
+      if (window.__INITIAL_COMPONENTS_STATE__ && this.$router) {
         const matched = this.$router.getMatchedComponents()
         if (!matched.length) return
 
